@@ -1,0 +1,32 @@
+anticreeper:
+  enabled: true
+  placedonly: true
+
+antienderman:
+  enabled: true
+  exceptions: false
+  list: [grass_block,dirt,sand]
+
+brewingxp:
+  enabled: true
+  brewxp: [4,6]
+
+farmingrework:
+  enabled: true
+  farmxp: [1,2]
+
+godapples:
+  enabled: true
+
+grieflogs:
+  enabled: true
+
+noelytra:
+  overworld: true
+  nether: true
+  end: false
+
+logs:
+  enabled: false
+  op: false
+  level: 0

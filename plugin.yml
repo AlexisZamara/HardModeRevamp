@@ -1,0 +1,14 @@
+name: hardModeRevamp
+main: ratatoskr.hardModeRevamp.Main
+version: 0.1.2
+api-version: 1.16
+commands:
+  rlogs:
+    description: Sets whether or not to send logs to server op.
+    usage: /<command> [true/false]
+    permission: ratatoskr.hardModeRevamp
+    permission-usage: Only op should have this command.
+permissions:
+  ratatoskr.rlogs:
+    description: rlogs command
+    default: op
