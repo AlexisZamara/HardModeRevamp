@@ -2,6 +2,7 @@ package ratatoskr.hardModeRevamp.listeners;
 
 import org.bukkit.World.Environment;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.plugin.Plugin;
@@ -14,7 +15,7 @@ public class EntityToggleGlide implements Listener {
 	// KNOWN ISSUE:
 	// attempting to glide repeatedly locks the player into a gliding state
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onEntityToggleGlide(EntityToggleGlideEvent event) {
 		if(event.getEntity().getWorld().getEnvironment() == Environment.NORMAL && plugin.getConfig().getBoolean("noelytra.overworld")) {
 			event.setCancelled(true);

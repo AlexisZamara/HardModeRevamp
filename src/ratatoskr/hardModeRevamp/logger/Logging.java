@@ -24,10 +24,13 @@ public class Logging {
 		switch(level) {
 		case 0:
 			levelString = ChatColor.WHITE + "INFO";
+			break;
 		case 1:
 			levelString = ChatColor.YELLOW + "WARNING";
+			break;
 		case 2:
 			levelString = ChatColor.RED + "ERROR";
+			break;
 		}
 		
 		if(plugin.getConfig().getBoolean("logs.op")) {

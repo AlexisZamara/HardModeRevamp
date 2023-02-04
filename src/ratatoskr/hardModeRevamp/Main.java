@@ -50,7 +50,6 @@ public class Main extends JavaPlugin {
 		
 		// TODO, replace all instances of "this.plugin = plugin" with "Plugin plugin = Main.getPlugin()";
 		// TODO: break up the listeners based on what each module is supposed to do instead of shoving everything into one EventHandler
-		// TODO: add logs to all files for testing purposes
 		getServer().getPluginManager().registerEvents(new BlockBroken(), this);
 		getServer().getPluginManager().registerEvents(new BlockPlaced(), this);
 		getServer().getPluginManager().registerEvents(new CreatureSpawn(), this);

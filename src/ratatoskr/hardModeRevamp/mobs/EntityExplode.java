@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import ratatoskr.hardModeRevamp.Main;
+import ratatoskr.hardModeRevamp.logger.Logging;
 
 public class EntityExplode implements Listener {
 	private Plugin plugin = Main.getPlugin();
@@ -21,6 +22,7 @@ public class EntityExplode implements Listener {
 		if(plugin.getConfig().getBoolean("anticreeper.enabled") && event.getEntityType() == EntityType.CREEPER) {
 			if(plugin.getConfig().getBoolean("anticreeper.placedonly")) {
 				for (Block b : new ArrayList<Block>(event.blockList())) {
+					Logging.logError(b.getType().toString(), 0);
 					if(b.hasMetadata("ppb")) {
 						event.getLocation().getWorld().dropItem(b.getLocation(), new ItemStack(b.getType()));
 						b.setType(Material.AIR);

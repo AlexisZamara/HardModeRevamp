@@ -17,7 +17,7 @@ import org.bukkit.potion.PotionEffectType;
 public class Stamina implements Listener {
 	
 	// KNOWN ISSUES:
-	// stamina does not appear to go down
+	// PotionEffect.HUNGER does NOT drain HUNGER bar as it should
 	// player cannot eat food unless stamina is lower than maximum, even when damaged
 	
 	// SOLUTION:
@@ -27,16 +27,19 @@ public class Stamina implements Listener {
 	public void onPlayerSprint(PlayerToggleSprintEvent event) {
 		if(event.getPlayer().getFoodLevel() > 0 && !(event.getPlayer().isSprinting())) {
 			event.getPlayer().setSprinting(true);
+			event.setCancelled(true);
 		}
 	}
 	
 	@EventHandler (priority = EventPriority.HIGH)
 	public void onPlayerHungerChange(FoodLevelChangeEvent event) {
+		event.getEntity().setSaturation(0.0f);
+		
 		if(event.isCancelled()) {
 			return;
 		}
 		if(event.getEntity().hasPotionEffect(PotionEffectType.HUNGER)) {
-			return; // potential issue: other effects will eat away at the player's food bar due to not cancelling hunger ticks while under this effect
+			return; // potential issue: other effects will eat away at the player's food bar due to not canceling hunger ticks while under this effect
 		}
 		// food level only changes when eating or sprinting
 		if(event.getItem() == null && !((Player) event.getEntity()).isSprinting()) {
@@ -57,17 +60,14 @@ public class Stamina implements Listener {
 			event.setCancelled(true);
 			return;
 		}
-		// needed testing: whether setExhaustion sets the TOTAL exhaustion value OR adds to it
-		// testing method: if the sprint lasts forever regardless of the float value, then setExhaustion is the TOTAL
-		// otherwise tweak it as needed to achieve 105 sprint-jump duration and 150 sprint duration
 		if(event.getExhaustionReason() == ExhaustionReason.SPRINT) {
-			event.setExhaustion(0.5f); // 0.02f
+			event.setExhaustion(0.13f); // 0.13f
 		}
 		else if(event.getExhaustionReason() == ExhaustionReason.JUMP) {
-			event.setExhaustion(0.5f); // 0.01f
+			event.setExhaustion(0.08f); // 0.08f
 		}
 		else {
-			event.setExhaustion(0.5f); // 0.05f
+			event.setExhaustion(0.2f); // 0.18f
 		}
 	}
 	
