@@ -35,6 +35,7 @@
   - bonus values are 1 less than they should be (base weapon values are always 1)
 
 ## Features (planned?)
+- XP from combat increased
 - Taking damage while regenerating health suspends or cancels health regeneration for a few seconds
 - Enchantment overhaul
 - Adding curses at the enchantment table
@@ -49,6 +50,7 @@
 - elytra flight disabled outside of The End
 - players now gain experience from farming
   - breaking crops with a hoe grants 1-2 points of experience
+  - breaking pumpkins and melons with an axe grants 1-2 points of experience
 - payers now gain experience from brewing
   - taking a potion from a brewing stand grands 4-6 points of experience
 
