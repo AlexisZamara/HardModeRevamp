@@ -13,6 +13,7 @@
 - God apples craftable again
 - Health no longer affected by food bar, eating provides a quick burst of health regeneration
 - Hostile mobs have randomized speed and health values
+- Hostile mob xp increased
 - Piglin bartering rebalanced
 - Phantoms disabled
 - Potion brewing grants XP
@@ -26,17 +27,12 @@
 ## Known Issues:
 - Elytra flight:
   - spamming elytra glides causes the player character to become stuck in the glide animation with no movement speed
-- Health:
-  - right click to eat while looking at a block with food in the right hand to heal health does not trigger the ItemInteractEvent to allow the food to be eaten
-  - right click on a cake consumes the cake but does not give health regeneration
+- Healing:
+  - Eating food with right click while looking at a block has a delay of at least one tick.
 - Stamina:
   - player sprint ends when food bar reaches 6/20
-  - PotionEffect.HUNGER does not drain food bar
-- Weapons rebalance:
-  - bonus values are 1 less than they should be (base weapon values are always 1)
 
 ## Features (planned?)
-- XP from combat increased
 - Taking damage while regenerating health suspends or cancels health regeneration for a few seconds
 - Enchantment overhaul
 - Adding curses at the enchantment table
@@ -57,13 +53,19 @@
 
 #### Item Changes
 - breaking a crop with a hoe automatically replants it using one of the dropped seeds
-- god apples can be crafted using an Apple surrounded by 8 Gold Blocks
+- god apples can be crafted using shaped recipe:
+  - A = Apple / G = Gold Block
+    - G G G
+    - G A G
+    - G G G
 - gold armor rebalanced:
-  - gold chestplate armor value increased from 
+  - gold chestplate armor value increased from 5 to 6.5
+  - gold leggings armor value increased from 3 to 4.5
+  - gold boots armor value increased from 1 to 2.5
 - weapon damage rebalanced:
-  - base axe damage reduced by 6 points
-  - base sword damage reduced by 2 points
-
+  - axe damage returned to 1.8.1 values (base fist damage +1, total of one heart of damage)
+  - sword damage reduced by 1 (or half a heart)
+  
 #### Gameplay Changes
 - creeper explosions always cause blocks placed by a player to drop when destroyed 
   - the dropped items may still be destroyed by a different creeper explosion
@@ -73,6 +75,7 @@
 #### Hostile Mob Changes
 - all hostile mobs:
   - health values now randomized ([0.85 to 1.2] * base health value)
+  - xp dropped increased by a random (int) between 1 and 5
 - creepers:
   - explosion now always destroys a player's shield if blocking
   - explosion radius increased by 1
