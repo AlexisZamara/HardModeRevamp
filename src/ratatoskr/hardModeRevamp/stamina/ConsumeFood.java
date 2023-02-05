@@ -23,6 +23,8 @@ import ratatoskr.hardModeRevamp.utils.RConstants;
 public class ConsumeFood implements Listener {
 	private Plugin plugin = Main.getPlugin();
 	
+	// TODO: add custom PotionEffectType.COMBAT_SICKNESS : player cannot get the PotionEffectType.REGENERATION from eating food (except God Apples) for 12 seconds 
+	
 	// KNOWN ISSUE:
 	// right click to eat with main hand while looking at a block is unresponsive is the tick delay is set to less than 5
 	// all other situations happen on the same tick but this one for some unknown reason happens on the next tick
@@ -58,6 +60,10 @@ public class ConsumeFood implements Listener {
 	
 	@EventHandler 
 	public void onPlayerTryConsumeCake(PlayerInteractEvent event) {
+		if(event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+			return;
+		}
+		
 		if(event.getClickedBlock().getType() == Material.CAKE && !event.getPlayer().isSneaking()) {
 			if(event.getPlayer().getHealth() < 20.0 || event.getPlayer().getFoodLevel() < 20) {
 				event.setCancelled(true);
@@ -66,6 +72,10 @@ public class ConsumeFood implements Listener {
 				setHealthRegen(event.getPlayer(), Material.CAKE);
 
 				Cake cake = (Cake) event.getClickedBlock().getBlockData();
+				if(cake.getBites() > 5) {
+					event.getClickedBlock().breakNaturally();
+					return;
+				}
 				cake.setBites(cake.getBites() + 1);
 				event.getClickedBlock().setBlockData(cake);
 			}
@@ -185,17 +195,17 @@ public class ConsumeFood implements Listener {
 			}
 			else {
 				if(rng < 0.5) {
-					player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 100, 2, false, false, false));
+					player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 80, 80, false, false, false));
 					rng = Math.random();
 					if(rng > 0.85) {
-						player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100, 0, false, false, false));
+						player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 400, 0, false, false, false));
 					}
 				}
 				else {
-					player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100, 0, false, false, false));
+					player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 400, 0, false, false, false));
 					rng = Math.random();
 					if(rng > 0.85) {
-						player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 100, 2, false, false, false));
+						player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 80, 80, false, false, false));
 					}
 				}
 			}
@@ -210,13 +220,16 @@ public class ConsumeFood implements Listener {
 		if(rng < 0.2) {
 			return;
 		}
-		player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 140, 0, false, false, false));
+		player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, 60, 80, false, false, false));
 	}
 	
 	private void eatFood(Player player) {
 		if(player.getFoodLevel() != 20) {
             return;
         }
+		if(player.hasPotionEffect(PotionEffectType.HUNGER)) {
+			return;
+		}
         player.setFoodLevel(19);
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             public void run() {
