@@ -31,6 +31,7 @@
   - right click on a cake consumes the cake but does not give health regeneration
 - Stamina:
   - player sprint ends when food bar reaches 6/20
+  - PotionEffect.HUNGER does not drain food bar
 - Weapons rebalance:
   - bonus values are 1 less than they should be (base weapon values are always 1)
 
@@ -65,12 +66,16 @@
 
 #### Gameplay Changes
 - creeper explosions always cause blocks placed by a player to drop when destroyed 
+  - the dropped items may still be destroyed by a different creeper explosion
 - night can no longer be skipped
-- respawning at a bed now spawns the player on the surface within a 128-block radius
+- respawning at a bed now spawns the player on the surface within a 128-block radius around the bed's location
 
 #### Hostile Mob Changes
-- creepers now destroy a shield if the player blocks the explosion
-- creeper explosion radius increased by 1
+- all hostile mobs:
+  - health values now randomized ([0.85 to 1.2] * base health value)
+- creepers:
+  - explosion now always destroys a player's shield if blocking
+  - explosion radius increased by 1
 - endermen can no longer pick up blocks
 - phantoms removed from the game
 - spiders:
@@ -78,8 +83,6 @@
 - zombies:
   - speed now a random value between 0.22 and 0.245
   - zombie reinforcement rate increased by 0.05
-- all hostile mobs:
-  - health values now randomized ([0.8 to 1.2] * base health value)
   
 #### Passive Mob Changes
 - Piglin bartering table replaced
@@ -87,7 +90,34 @@
 
 
 ### Piglin Barter Table
-(to be added soon)
+| ITEM  | AMOUNT | ODDS |
+| ----- | ------ | ---- |
+| Iron Boots (Soul Speed) | 1 | 1 / 225 |
+| Splash Potion (Fire Res) | 1 | 1 / 225 |
+| Potion (Fire Res) | 1 | 1 / 225 |
+| Lava Bucket | 1 | 2 / 225 |
+| Chainmail (random piece) | 1 | 10 / 225 |
+| Gold Nugget | 1-8 | 11 / 225 |
+| Water Bottle | 1 | 11 / 225 |
+| Fire Charge | 1-2 | 16 / 225 |
+| Charcoal | 1-12 | 21 / 225 |
+| Dyes | 1-3 | 21 / 225 |
+| Spectral Arrow | 4-9 | 25 / 225 |
+| Crying Obsidian | 1-4 | 35 / 225 |
+| Leather | 1-3 | 35 / 225 |
+| Gravel | 3-8 | 35 / 225 |
 
 ### Villager Trade Table
-(to be added soon)
+| OFFER | RECEIVE | RATIO |
+| ----- | ------- |:-----:|
+| DIAMOND | EMERALD | 1:1 |
+| IRON BLOCK | EMERALD | 3:1 |
+| REDSTONE BLOCK | EMERALD | 11:1 |
+| COAL BLOCK | EMERALD | 33:1 |
+| EMERALD | BELL | 1:4 |
+| EMERALD | EXPERIENCE BOTTLE | 1:1 |
+| EMERALD | ITEM FRAME | 1:16 |
+| EMERALD | NAME TAG | 1:3 |
+| EMERALD | PAINTING | 1:16 |
+| EMERALD | SCUTE | 1:1 |
+| EMERALD | SUSPICIOUS STEW | 1:1 |
