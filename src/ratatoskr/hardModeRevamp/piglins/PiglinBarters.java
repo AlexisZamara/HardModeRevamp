@@ -46,8 +46,6 @@ public class PiglinBarters {
 			case 3:
 				droppedItem = new ItemStack(Material.YELLOW_DYE, quantity);
 				break;
-			default:
-				droppedItem = new ItemStack(Material.SAND, quantity); // testing only
 			}
 		}
 		else if(rng > 23.555) {
@@ -83,8 +81,6 @@ public class PiglinBarters {
 			case 3:
 				droppedItem = new ItemStack(Material.CHAINMAIL_LEGGINGS, quantity);
 				break;
-			default:
-				droppedItem = new ItemStack(Material.DIRT, quantity); // testing only
 			}
 		}
 		else if(rng > 1.333) {

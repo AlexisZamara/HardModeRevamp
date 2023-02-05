@@ -12,12 +12,12 @@ public enum ItemType {
 	DIAMOND_SWORD("generic.attack_damage", 7.0, EquipmentSlot.HAND, Attribute.GENERIC_ATTACK_DAMAGE),
 	NETHERITE_SWORD("generic.attack_damage", 8.0, EquipmentSlot.HAND, Attribute.GENERIC_ATTACK_DAMAGE),
 	
-	WOODEN_AXE("generic.attack_damage", 7.0, EquipmentSlot.HAND, Attribute.GENERIC_ATTACK_DAMAGE),
-	STONE_AXE("generic.attack_damage", 9.0, EquipmentSlot.HAND, Attribute.GENERIC_ATTACK_DAMAGE),
-	GOLDEN_AXE("generic.attack_damage", 7.0, EquipmentSlot.HAND, Attribute.GENERIC_ATTACK_DAMAGE),
-	IRON_AXE("generic.attack_damage", 9.0, EquipmentSlot.HAND, Attribute.GENERIC_ATTACK_DAMAGE),
-	DIAMOND_AXE("generic.attack_damage", 9.0, EquipmentSlot.HAND, Attribute.GENERIC_ATTACK_DAMAGE),
-	NETHERITE_AXE("generic.attack_damage", 10.0, EquipmentSlot.HAND, Attribute.GENERIC_ATTACK_DAMAGE),
+	WOODEN_AXE("generic.attack_damage", 0.0, EquipmentSlot.HAND, Attribute.GENERIC_ATTACK_DAMAGE),
+	STONE_AXE("generic.attack_damage", 0.0, EquipmentSlot.HAND, Attribute.GENERIC_ATTACK_DAMAGE),
+	GOLDEN_AXE("generic.attack_damage", 0.0, EquipmentSlot.HAND, Attribute.GENERIC_ATTACK_DAMAGE),
+	IRON_AXE("generic.attack_damage", 0.0, EquipmentSlot.HAND, Attribute.GENERIC_ATTACK_DAMAGE),
+	DIAMOND_AXE("generic.attack_damage", 0.0, EquipmentSlot.HAND, Attribute.GENERIC_ATTACK_DAMAGE),
+	NETHERITE_AXE("generic.attack_damage", 0.0, EquipmentSlot.HAND, Attribute.GENERIC_ATTACK_DAMAGE),
 	
 	GOLDEN_BOOTS("generic.armor", 1.0, EquipmentSlot.FEET, Attribute.GENERIC_ARMOR),
 	GOLDEN_CHESTPLATE("generic.armor", 5.0, EquipmentSlot.CHEST, Attribute.GENERIC_ARMOR),

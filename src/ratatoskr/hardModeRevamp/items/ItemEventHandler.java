@@ -25,41 +25,43 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 public class ItemEventHandler implements Listener {
-	// KNOWN ISSUES:
-	// addAttributeModifier even with Operation.ADD_NUMBER does not actually ADD to the BASE VALUE, it SETS the value for all slots (Main, Off, Hat, Chest, Leg, Feet)
-	// FIX:
-	// either find a way to ADD to the default attribute
+	private Double armorMod = 1.5;
+	private Double axeMod = 1.0;
+	private Double swordMod = -2.0;
+	
+	private Attribute armorAttr = Attribute.GENERIC_ARMOR;
+	private Attribute weaponAttr = Attribute.GENERIC_ATTACK_DAMAGE;
 	
 	@EventHandler
 	public void onCraftItem(CraftItemEvent event) {
 		if(Arrays.asList(RConstants.REWORKED_SWORDS).contains(event.getRecipe().getResult().getType())) {			
-			AttributeModifier newMod = getItemAttributes(event.getRecipe().getResult(), -1.0);
+			AttributeModifier newMod = getItemAttributes(event.getRecipe().getResult(), swordMod);
 			
 			ItemStack sword = event.getRecipe().getResult();
 			ItemMeta swordMeta = sword.getItemMeta();
-			swordMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, newMod);
+			swordMeta.addAttributeModifier(weaponAttr, newMod);
 			
 			swordMeta.getPersistentDataContainer().set(RConstants.PERSISTENT_KEY, PersistentDataType.STRING, RConstants.PERSISTENT_REWORKED_STRING);
 			
 			sword.setItemMeta(swordMeta);
 		}
 		else if(Arrays.asList(RConstants.REWORKED_AXES).contains(event.getRecipe().getResult().getType())) {
-			AttributeModifier newMod = getItemAttributes(event.getRecipe().getResult(), -7.0);
+			AttributeModifier newMod = getItemAttributes(event.getRecipe().getResult(), axeMod);
 			
 			ItemStack axe = event.getRecipe().getResult();
 			ItemMeta axeMeta = axe.getItemMeta();
-			axeMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, newMod);
+			axeMeta.addAttributeModifier(weaponAttr, newMod);
 			
 			axeMeta.getPersistentDataContainer().set(RConstants.PERSISTENT_KEY, PersistentDataType.STRING, RConstants.PERSISTENT_REWORKED_STRING);
 			
 			axe.setItemMeta(axeMeta);
 		}
 		else if(Arrays.asList(RConstants.REWORKED_GOLDEN_ARMOR).contains(event.getRecipe().getResult().getType())) {
-			AttributeModifier newMod = getItemAttributes(event.getRecipe().getResult(), 1.5);
+			AttributeModifier newMod = getItemAttributes(event.getRecipe().getResult(), armorMod);
 			
 			ItemStack armor = event.getRecipe().getResult();
 			ItemMeta armorMeta = armor.getItemMeta();
-			armorMeta.addAttributeModifier(Attribute.GENERIC_ARMOR, newMod);
+			armorMeta.addAttributeModifier(armorAttr, newMod);
 			
 			armorMeta.getPersistentDataContainer().set(RConstants.PERSISTENT_KEY, PersistentDataType.STRING, RConstants.PERSISTENT_REWORKED_STRING);
 			
@@ -80,7 +82,7 @@ public class ItemEventHandler implements Listener {
 		
 		ItemMeta meta = updateMeta(item);
 		if(meta == null) {
-			Logging.logError("ENTITY DROP ITEM IS NOT GOLDEN_ARMOR", 2);
+			Logging.logError("ENTITY DROP ITEM IS NOT GOLDEN_ARMOR: " + item.getType(), 2);
 			return;
 		}
 		item.setItemMeta(meta);
@@ -98,7 +100,7 @@ public class ItemEventHandler implements Listener {
 		}
 		ItemMeta meta = updateMeta(item);
 		if(meta == null) {
-			Logging.logError("ENTITY PICKUP ITEM IS NOT GOLDEN_ARMOR", 2);
+			Logging.logError("ENTITY PICKUP ITEM IS NOT GOLDEN_ARMOR: " + item.getType(), 2);
 			return;
 		}
 		item.setItemMeta(meta);
@@ -124,7 +126,7 @@ public class ItemEventHandler implements Listener {
 		
 		ItemMeta meta = updateMeta(item);
 		if(meta == null) {
-			Logging.logError("INVENTORY CLICK ITEM IS NOT GOLDEN_ARMOR", 2);
+			Logging.logError("INVENTORY CLICK ITEM IS NOT GOLDEN_ARMOR: " + item.getType(), 2);
 			return;
 		}
 		item.setItemMeta(meta);
@@ -142,16 +144,16 @@ public class ItemEventHandler implements Listener {
 		ItemMeta meta = item.getItemMeta();
 		
 		if(Arrays.asList(RConstants.REWORKED_AXES).contains(item.getType())) {
-			AttributeModifier newMod = getItemAttributes(item, -7.0);
-			meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, newMod);
+			AttributeModifier newMod = getItemAttributes(item, axeMod);
+			meta.addAttributeModifier(weaponAttr, newMod);
 		}
 		else if(Arrays.asList(RConstants.REWORKED_SWORDS).contains(item.getType())) {
-			AttributeModifier newMod = getItemAttributes(item, -1.0);
-			meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, newMod);
+			AttributeModifier newMod = getItemAttributes(item, swordMod);
+			meta.addAttributeModifier(weaponAttr, newMod);
 		}
 		else {
-			AttributeModifier newMod = getItemAttributes(item, 1.5);
-			meta.addAttributeModifier(Attribute.GENERIC_ARMOR, newMod);
+			AttributeModifier newMod = getItemAttributes(item, armorMod);
+			meta.addAttributeModifier(armorAttr, newMod);
 		}
 		
 		meta.getPersistentDataContainer().set(RConstants.PERSISTENT_KEY, PersistentDataType.STRING, RConstants.PERSISTENT_REWORKED_STRING);

@@ -2,8 +2,8 @@ package ratatoskr.hardModeRevamp.stamina;
 
 import java.util.Arrays;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.data.type.Cake;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,61 +18,56 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import ratatoskr.hardModeRevamp.Main;
-import ratatoskr.hardModeRevamp.logger.Logging;
 import ratatoskr.hardModeRevamp.utils.RConstants;
 
 public class ConsumeFood implements Listener {
 	private Plugin plugin = Main.getPlugin();
 	
-	@EventHandler(priority = EventPriority.HIGHEST)
+	// KNOWN ISSUE:
+	// right click to eat with main hand while looking at a block is unresponsive is the tick delay is set to less than 5
+	// all other situations happen on the same tick but this one for some unknown reason happens on the next tick
+	// so far all attempts to fix this issue have failed
+	// for now, the solution is to increase tick delay and make eating with main hand while looking at a block at least one tick slower than the other methods 
+	
+	@EventHandler
 	public void onPlayerTryConsumeFood(PlayerInteractEvent event) {
-		if(event.getClickedBlock() != null) {
-			Logging.logError(event.getClickedBlock().getType().toString(), 1);
+		// this event only needs to trigger if the player's food level is at maximum and health is not
+		// if the player's food is below maximum, eating is already handled by the game and this event is not required
+		// if the player's health is at maximum, the player should not eat because they cannot regenerate health
+		if(event.getPlayer().getFoodLevel() < 20 || event.getPlayer().getHealth() == 20.0) {
+			return;
 		}
-		if(event.getClickedBlock() == null) {
-			Logging.logError("clearly gets called", 0);
-		}
-		if(event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getPlayer().getHealth() != 20.0) {
-			if(event.getClickedBlock().getType() == Material.CAKE) {
-				eatFood(event.getPlayer());
-				return;
-			}
-			if(event.getPlayer().getInventory().getItemInMainHand().getType().isEdible()) {
-				Logging.logError("entered block", 0);
-				if(!event.getClickedBlock().getType().isInteractable()) {
-					Logging.logError("is not interactible", 1);
-					if(Arrays.asList(RConstants.FOOD_LIST).contains(event.getPlayer().getInventory().getItemInMainHand().getType())) {
-						Logging.logError("eat", 1);
-						eatFood(event.getPlayer());
-						Bukkit.getPluginManager().callEvent(new PlayerInteractEvent(event.getPlayer(), Action.RIGHT_CLICK_AIR, event.getItem(), null, event.getBlockFace(), event.getHand()));
-						return;
-					}
-				}
-			}
-			if(event.getPlayer().getInventory().getItemInOffHand().getType().isEdible()) {
-				if(!event.getClickedBlock().getType().isInteractable()) {
-					if(Arrays.asList(RConstants.FOOD_LIST).contains(event.getPlayer().getInventory().getItemInOffHand().getType())) {
-						eatFood(event.getPlayer());
-						return;
-					}
+		
+		if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			if(event.getPlayer().getInventory().getItem(event.getHand()).getType().isEdible() && !event.getClickedBlock().getType().isInteractable()) {
+				if(Arrays.asList(RConstants.FOOD_LIST).contains(event.getPlayer().getInventory().getItem(event.getHand()).getType())) {
+					eatFood(event.getPlayer());
+			        return;
 				}
 			}
 		}
-		if(event.getAction() == Action.RIGHT_CLICK_AIR && event.getPlayer().getHealth() != 20.0) {
-			Logging.logError("entered air block", 1);
-			if(event.getPlayer().getInventory().getItemInMainHand().getType().isEdible()) {
-				Logging.logError("item in main hand", 0);
-				if(Arrays.asList(RConstants.FOOD_LIST).contains(event.getPlayer().getInventory().getItemInMainHand().getType())) {
-					Logging.logError(("item is food"), 2);
+		if(event.getAction() == Action.RIGHT_CLICK_AIR) {
+			if(event.getPlayer().getInventory().getItem(event.getHand()).getType().isEdible()) {
+				if(Arrays.asList(RConstants.FOOD_LIST).contains(event.getPlayer().getInventory().getItem(event.getHand()).getType())) {
 					eatFood(event.getPlayer());
 					return;
 				}
 			}
-			if(event.getPlayer().getInventory().getItemInOffHand().getType().isEdible()) {
-				if(Arrays.asList(RConstants.FOOD_LIST).contains(event.getPlayer().getInventory().getItemInOffHand().getType())) {
-					eatFood(event.getPlayer());
-						return;
-				}
+		}
+	}
+	
+	@EventHandler 
+	public void onPlayerTryConsumeCake(PlayerInteractEvent event) {
+		if(event.getClickedBlock().getType() == Material.CAKE && !event.getPlayer().isSneaking()) {
+			if(event.getPlayer().getHealth() < 20.0 || event.getPlayer().getFoodLevel() < 20) {
+				event.setCancelled(true);
+
+				event.getPlayer().setFoodLevel(Math.min(20, event.getPlayer().getFoodLevel() + FoodType.CAKE.getFood()));
+				setHealthRegen(event.getPlayer(), Material.CAKE);
+
+				Cake cake = (Cake) event.getClickedBlock().getBlockData();
+				cake.setBites(cake.getBites() + 1);
+				event.getClickedBlock().setBlockData(cake);
 			}
 		}
 	}
@@ -227,7 +222,7 @@ public class ConsumeFood implements Listener {
             public void run() {
                 player.setFoodLevel(20);
             }
-        }, 1L);
+        }, 5L);
 		return;
 	}
 }

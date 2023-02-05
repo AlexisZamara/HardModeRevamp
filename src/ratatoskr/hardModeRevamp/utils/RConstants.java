@@ -4,6 +4,7 @@ import ratatoskr.hardModeRevamp.Main;
 
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.EntityType;
 
 public class RConstants {
 	public static final String PERSISTENT_REWORKED_STRING = "reworked";
@@ -36,5 +37,11 @@ public class RConstants {
 	
 	public static final Material[] UNSAFE_BLOCKS = {Material.CACTUS, Material.CAULDRON, Material.CHEST, Material.SPAWNER, 
 			Material.TNT, Material.TRAPPED_CHEST, Material.DISPENSER, Material.DROPPER, Material.MAGMA_BLOCK
+			};
+	
+	public static final EntityType[] HOSTILE_MOBS = {EntityType.BLAZE, EntityType.CAVE_SPIDER, EntityType.CREEPER, EntityType.DROWNED, EntityType.ELDER_GUARDIAN, EntityType.ENDERMAN,
+			EntityType.EVOKER, EntityType.GHAST, EntityType.GUARDIAN, EntityType.HOGLIN, EntityType.HUSK, EntityType.MAGMA_CUBE, EntityType.PIGLIN, EntityType.PIGLIN_BRUTE, EntityType.PILLAGER,
+			EntityType.RAVAGER, EntityType.SKELETON, EntityType.SPIDER, EntityType.STRAY, EntityType.VINDICATOR, EntityType.WITCH, EntityType.WITHER_SKELETON, EntityType.ZOGLIN,
+			EntityType.ZOMBIE, EntityType.ZOMBIE_VILLAGER, EntityType.ZOMBIFIED_PIGLIN
 			};
 }

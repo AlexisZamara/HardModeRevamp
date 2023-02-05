@@ -8,12 +8,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.plugin.Plugin;
 
+import ratatoskr.hardModeRevamp.Main;
+
 public class EntityChangeBlock implements Listener {
-	Plugin plugin;
-	
-	public EntityChangeBlock(Plugin plugin) {
-		this.plugin = plugin;
-	}
+	Plugin plugin = Main.getPlugin();
 	
 	@EventHandler
 	public void onEntityChangeBlock(EntityChangeBlockEvent event) {

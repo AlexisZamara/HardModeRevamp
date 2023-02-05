@@ -17,7 +17,7 @@ public class CreatureSpawn implements Listener {
 	@EventHandler
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
 		if(event.getEntityType() == EntityType.CREEPER) {	
-			((Creeper) event.getEntity()).setExplosionRadius(((Creeper) event.getEntity()).getExplosionRadius() + 1); // for testing purposes, increase this value to 10
+			((Creeper) event.getEntity()).setExplosionRadius(((Creeper) event.getEntity()).getExplosionRadius() + 1);
 		}
 		else if(event.getEntityType() == EntityType.PHANTOM) {
 			event.setCancelled(true);

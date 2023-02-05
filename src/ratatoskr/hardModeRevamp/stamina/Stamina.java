@@ -14,14 +14,13 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.bukkit.potion.PotionEffectType;
 
+import ratatoskr.hardModeRevamp.logger.Logging;
+
 public class Stamina implements Listener {
 	
 	// KNOWN ISSUES:
 	// PotionEffect.HUNGER does NOT drain HUNGER bar as it should
-	// player cannot eat food unless stamina is lower than maximum, even when damaged
-	
-	// SOLUTION:
-	// on item right click (?) EventHandler for food logic?
+	// test eating cake for stamina
 	
 	@EventHandler
 	public void onPlayerSprint(PlayerToggleSprintEvent event) {
@@ -39,6 +38,7 @@ public class Stamina implements Listener {
 			return;
 		}
 		if(event.getEntity().hasPotionEffect(PotionEffectType.HUNGER)) {
+			Logging.logError("hunger effect", 0);
 			return; // potential issue: other effects will eat away at the player's food bar due to not canceling hunger ticks while under this effect
 		}
 		// food level only changes when eating or sprinting

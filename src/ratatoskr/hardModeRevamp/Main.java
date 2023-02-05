@@ -18,6 +18,7 @@ import ratatoskr.hardModeRevamp.logger.Logging;
 import ratatoskr.hardModeRevamp.mobs.CreatureSpawn;
 import ratatoskr.hardModeRevamp.mobs.EntityChangeBlock;
 import ratatoskr.hardModeRevamp.mobs.EntityDamageByEntity;
+import ratatoskr.hardModeRevamp.mobs.EntityDeath;
 import ratatoskr.hardModeRevamp.mobs.EntityExplode;
 import ratatoskr.hardModeRevamp.piglins.PiglinHandler;
 import ratatoskr.hardModeRevamp.stamina.ConsumeFood;
@@ -48,29 +49,38 @@ public class Main extends JavaPlugin {
 		
 		this.getCommand("rlogs").setExecutor(new Commands());
 		
-		// TODO, replace all instances of "this.plugin = plugin" with "Plugin plugin = Main.getPlugin()";
 		// TODO: break up the listeners based on what each module is supposed to do instead of shoving everything into one EventHandler
 		getServer().getPluginManager().registerEvents(new BlockBroken(), this);
 		getServer().getPluginManager().registerEvents(new BlockPlaced(), this);
-		getServer().getPluginManager().registerEvents(new CreatureSpawn(), this);
-		getServer().getPluginManager().registerEvents(new EntityChangeBlock(this), this);
-		getServer().getPluginManager().registerEvents(new EntityDamageByEntity(), this);
-		getServer().getPluginManager().registerEvents(new EntityExplode(), this);
 		getServer().getPluginManager().registerEvents(new EntityToggleGlide(), this);
 		getServer().getPluginManager().registerEvents(new InventoryClick(), this);
 		
+		// beds
 		getServer().getPluginManager().registerEvents(new PlayerRespawn(), this);
 		getServer().getPluginManager().registerEvents(new TimeSkip(), this);
-		
+
+		// items
 		getServer().getPluginManager().registerEvents(new ItemEventHandler(), this);
 		
-		getServer().getPluginManager().registerEvents(new Stamina(), this);
-		getServer().getPluginManager().registerEvents(new ConsumeFood(), this);
+		// logger
+		getServer().getPluginManager().registerEvents(new GriefLogging(), this);
 		
-		getServer().getPluginManager().registerEvents(new PlayerInteractVillagerEvent(), this);
+		// mobs
+		getServer().getPluginManager().registerEvents(new CreatureSpawn(), this);
+		getServer().getPluginManager().registerEvents(new EntityChangeBlock(), this);
+		getServer().getPluginManager().registerEvents(new EntityDamageByEntity(), this);
+		getServer().getPluginManager().registerEvents(new EntityDeath(), this);
+		getServer().getPluginManager().registerEvents(new EntityExplode(), this);
+		
+		// piglins
 		getServer().getPluginManager().registerEvents(new PiglinHandler(), this);
 		
-		getServer().getPluginManager().registerEvents(new GriefLogging(), this);
+		// stamina
+		getServer().getPluginManager().registerEvents(new ConsumeFood(), this);
+		getServer().getPluginManager().registerEvents(new Stamina(), this);
+		
+		// villagers
+		getServer().getPluginManager().registerEvents(new PlayerInteractVillagerEvent(), this);
 		
 		Logging.logError("Plugin startup completed", 0);
 	}

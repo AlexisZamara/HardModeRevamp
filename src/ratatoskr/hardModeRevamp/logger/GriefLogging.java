@@ -12,7 +12,6 @@ public class GriefLogging implements Listener {
 	
 	public void onBlockBroken(BlockBreakEvent event) {
 		if(plugin.getConfig().getBoolean("grieflogs.enabled")) {
-			// check if the player breaking the block is in fact not the same one who placed the block
 			FixedMetadataValue playerMetadata = new FixedMetadataValue(plugin, event.getPlayer().getName());
 			if(event.getBlock().hasMetadata("ppb") && event.getBlock().getMetadata("ppb") != playerMetadata) {
 				String log = event.getPlayer().getName() + " has broken " +  event.getBlock().getType().toString() + " at coordinates: " + event.getBlock().getLocation().toString() + " ---- PPB METADATA: " + event.getBlock().getMetadata("ppb").toString();
