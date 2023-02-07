@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import ratatoskr.hardModeRevamp.beds.PlayerRespawn;
 import ratatoskr.hardModeRevamp.beds.TimeSkip;
+import ratatoskr.hardModeRevamp.enchantments.inventory.EnchantItem;
 import ratatoskr.hardModeRevamp.items.*;
 import ratatoskr.hardModeRevamp.listeners.*;
 import ratatoskr.hardModeRevamp.logger.Commands;
@@ -58,6 +59,9 @@ public class Main extends JavaPlugin {
 		// beds
 		getServer().getPluginManager().registerEvents(new PlayerRespawn(), this);
 		getServer().getPluginManager().registerEvents(new TimeSkip(), this);
+		
+		// enchantments
+		getServer().getPluginManager().registerEvents(new EnchantItem(), this);
 
 		// items
 		getServer().getPluginManager().registerEvents(new ItemEventHandler(), this);
