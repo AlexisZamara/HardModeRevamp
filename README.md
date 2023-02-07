@@ -1,6 +1,6 @@
 # HardModeRevamp
 (WIP) a Minecraft plugin meant to bring back some difficulty
-#### v0.1.3 - alpha bug fixing phase
+#### v0.2.0 - alpha bug fixing phase (enchantments)
 
 ## Features (finished)
 - Bed respawns altered
@@ -36,6 +36,7 @@
 - Taking damage while regenerating health suspends or cancels health regeneration for a few seconds
 - Enchantment overhaul
 - Adding curses at the enchantment table
+- Reworked loot chest balance by lowering odds of Diamonds and Diamond gear in chests (or completely removing them)
 
 
 ## Changelog
@@ -71,6 +72,12 @@
   - the dropped items may still be destroyed by a different creeper explosion
 - night can no longer be skipped
 - respawning at a bed now spawns the player on the surface within a 128-block radius around the bed's location
+
+### Enchantment Changes
+- enchantments now much more exclusive with each other
+- fewer total possible enchantments on tools, armors and weapons
+- Mending and Unbreaking made exclusive with most enchantments
+- Fortune (all levels) removed from the game
 
 #### Hostile Mob Changes
 - all hostile mobs:
@@ -124,3 +131,6 @@
 | EMERALD | PAINTING | 1:16 |
 | EMERALD | SCUTE | 1:1 |
 | EMERALD | SUSPICIOUS STEW | 1:1 |
+
+### Reworked Enchantment Table
+full table of changes will be added after the enchantment rework is complete
