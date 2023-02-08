@@ -8,33 +8,20 @@ import java.util.Map.Entry;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 
+import ratatoskr.hardModeRevamp.logger.Logging;
 import ratatoskr.hardModeRevamp.utils.RConstants;
 import ratatoskr.hardModeRevamp.utils.Random;
 
 public class Enchant {
 	
-	// decided not to replace enchantments in the display and instead opted to directly reroll enchantments after choosing. 
+	// decided not to replace enchantments in the GUI and instead opted to directly reroll enchantments after choosing. 
 	// Players will just be informed that Fortune is always converted into Silk Touch 
-//	public static EnchantmentOffer replaceEnchant(EnchantmentOffer offer, Material item) {
-//		EnchantmentOffer newOffer = offer;
-//		Integer enchantability = findEnchantability(item);
-//		Integer adjustedEnchantLevel = calcAdjustedEnchantLevel(offer.getCost(), enchantability);
-//		
-//		Map<Enchantment, Integer> enchants = getEnchantsPower(item, adjustedEnchantLevel, false);
-//		Integer totalWeight = getTotalEnchantmentsWeight(enchants, false);
-//		Enchantment enchantment = getRandomEnchantment(enchants, totalWeight);
-//		
-//		newOffer = new EnchantmentOffer(enchantment, enchants.get(enchantment), offer.getCost());
-//		
-//		return newOffer;
-//	}
-	
 	public static Map<Enchantment, Integer> enchantAtTable(Enchantment baseEnchant, Integer baseEnchantPower, Integer levelCost, Material item) {
 		HashMap<Enchantment, Integer> enchantList = new HashMap<Enchantment, Integer>();
 		
 		if(baseEnchant == Enchantment.LOOT_BONUS_BLOCKS) {
 			baseEnchant = Enchantment.SILK_TOUCH;
-			baseEnchantPower = 0;
+			baseEnchantPower = 1;
 			
 		}
 		enchantList.put(baseEnchant, baseEnchantPower);
@@ -42,13 +29,21 @@ public class Enchant {
 		Integer enchantability = findEnchantability(item);
 		Integer adjustedEnchantLevel = calcAdjustedEnchantLevel(levelCost, enchantability);
 		
-		Map<Enchantment, Integer> availableEnchants = getEnchantsPower(item, adjustedEnchantLevel, false);
-		availableEnchants = removeConflictingEnchants(availableEnchants, baseEnchant);
+		// current issues:
+		// removeConflictingEnchants() seems to always fails to remove enchants which are conflicting
+		// there is no pattern or logic, just chaos
+		// it seems like it simply ignores  
+		Map<Enchantment, Integer> availableEnchants = getEnchantsPower(item, adjustedEnchantLevel, false); // returns baseEnchantment which fails to be removed by removeConflictingEnchantments
+		availableEnchants = removeConflictingEnchants(availableEnchants, baseEnchant); // this does not remove conflicts properly??????????
+		if(availableEnchants == null || availableEnchants.isEmpty()) {
+			return enchantList;
+		}
+		
 		Integer totalWeight = getTotalEnchantmentsWeight(availableEnchants, false);
 		
 		Double a = Math.random();
-		Integer tempAdjusted = adjustedEnchantLevel;
-		Double odds = (double) ((tempAdjusted + 1) / 50);
+		Double tempAdjusted = adjustedEnchantLevel.doubleValue();
+		Double odds = ((tempAdjusted + 1) / 50);
 		Enchantment nextEnchant = null;
 		
 		while(a < odds) {
@@ -56,6 +51,10 @@ public class Enchant {
 			enchantList.put(nextEnchant, availableEnchants.get(nextEnchant));
 			
 			availableEnchants = removeConflictingEnchants(availableEnchants, nextEnchant);
+			if(availableEnchants == null || availableEnchants.isEmpty()) {
+				break;
+			}
+			
 			totalWeight = getTotalEnchantmentsWeight(availableEnchants, false);
 			
 			tempAdjusted = tempAdjusted / 2;
@@ -65,10 +64,11 @@ public class Enchant {
 		return enchantList;
 	}
 	
+	@SuppressWarnings("deprecation")
 	private static Enchantment getRandomEnchantment(Map<Enchantment, Integer> enchants, Integer totalWeight) {
 		Integer W = Random.RandomInt(0, totalWeight);
 		for(Map.Entry<Enchantment, Integer> e : enchants.entrySet()) {
-			W = W - Enchantments.valueOf(e.getKey().toString()).getWeight();
+			W = W - Enchantments.valueOf(e.getKey().getName().toString()).getWeight();
 			if(W < 0) {
 				return e.getKey();
 			}
@@ -80,22 +80,23 @@ public class Enchant {
 		return (int) Math.rint((cost + Random.RandomInt(0, Math.floorDiv(enchantability, 4)) + Random.RandomInt(0, Math.floorDiv(enchantability, 4))  + 1) * Random.RandomDouble(0.85, 1.15));
 	}
 	
+	@SuppressWarnings("deprecation")
 	private static Map<Enchantment, Integer> getEnchantsPower(Material item, Integer adjustedEnchValue, boolean treasure) {
 		HashMap<Enchantment, Integer> enchantPower = new HashMap<Enchantment, Integer>();
 		Enchantment[] enchantList = findEnchantmentList(item);
 		for(Enchantment e : enchantList) {
-			Enchantments enchant = Enchantments.valueOf(e.toString());
-			Integer level = -1;
+			Enchantments enchant = Enchantments.valueOf(e.getName().toString());
+			Integer level = 0;
 			if(!treasure && enchant.isTreasure()) {
 				continue;
 			}
 			for(int i = 0; i < enchant.getMinLevel().length; i++) {
 				if(adjustedEnchValue > enchant.getMinLevel()[i] && adjustedEnchValue < enchant.getMaxLevel()[i]) {
-					level = i;
+					level = i+1;
 				}
 			}
 			
-			if(level < 0) {
+			if(level < 1) {
 				continue;
 			}
 			enchantPower.put(e, level);
@@ -109,34 +110,37 @@ public class Enchant {
 	}
 	
 	private static Map<Enchantment, Integer> removeConflictingEnchants(Map<Enchantment, Integer> enchantmentList, Enchantment enchantment) {
-		HashMap<Enchantment, Integer> newEnchantmentList = (HashMap<Enchantment, Integer>) enchantmentList;
-		Enchantment[] conflicting = getConflicting(enchantment);
+		HashMap<Enchantment, Integer> newEnchantmentList = new HashMap<Enchantment, Integer>();
+		Enchantment[] conflicting = getConflicting(enchantment); // this appears to work but only partly?
+		Logging.logError(Arrays.asList(conflicting).toString(), 2);
 		if(conflicting == null) {
-			return enchantmentList;
+			return enchantmentList; // for some ungodly reason it returns this more often than it should
 		}
-		for(Map.Entry<Enchantment, Integer> e: enchantmentList.entrySet()) {
-			if(Arrays.asList(conflicting).contains(e.getKey())) {
-				newEnchantmentList.remove(e.getKey());
+		for(Map.Entry<Enchantment, Integer> e: enchantmentList.entrySet()) { // attempting to edit enchantmentList or to remove from newEnchantmentList if instanced as enchantmentList causes java.util.ConcurrentModificationException
+			if(e.getKey() != enchantment && !Arrays.asList(conflicting).contains(e.getKey())) { // it ignores the "e.get() != enchantment" with great fucking inconsistency
+				newEnchantmentList.put(e.getKey(),e.getValue());
 			}
 		}
 		
 		return newEnchantmentList;
 	}
 	
+	@SuppressWarnings("deprecation")
 	private static Enchantment[] getConflicting(Enchantment enchantment) {
-		if(Enchantments.valueOf(enchantment.toString()).getConflicts() == null) {
+		if(Enchantments.valueOf(enchantment.getName().toString()).getConflicts() == null) {
 			return null;
 		}
-		return Enchantments.valueOf(enchantment.toString()).getConflicts();
+		return Enchantments.valueOf(enchantment.getName().toString()).getConflicts();
 	}
 	
+	@SuppressWarnings("deprecation")
 	private static Integer getTotalEnchantmentsWeight(Map<Enchantment, Integer> enchants, boolean treasure) {
 		Integer total = 0;
 		for(Map.Entry<Enchantment, Integer> e : enchants.entrySet()) {
-			if(!treasure && Enchantments.valueOf(e.getKey().toString()).isTreasure()) {
+			if(!treasure && Enchantments.valueOf(e.getKey().getName().toString()).isTreasure()) {
 				continue;
 			}
-			total += Enchantments.valueOf(e.getKey().toString()).getWeight();
+			total += Enchantments.valueOf(e.getKey().getName().toString()).getWeight();
 		}
 		return total;
 	}

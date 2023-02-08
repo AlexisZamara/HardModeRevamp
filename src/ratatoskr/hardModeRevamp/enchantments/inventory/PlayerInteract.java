@@ -10,10 +10,6 @@ public class PlayerInteract implements Listener {
 	@EventHandler
 	public void onPlayerInteractEvent(PlayerInteractEvent event) {
 		if(event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			if(event.getClickedBlock().getType() == Material.ENCHANTING_TABLE) {
-				
-			}
-			
 			if(event.getClickedBlock().getType() == Material.ANVIL) {
 				
 			}
