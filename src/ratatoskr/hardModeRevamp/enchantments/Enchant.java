@@ -2,8 +2,8 @@ package ratatoskr.hardModeRevamp.enchantments;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -29,12 +29,10 @@ public class Enchant {
 		Integer enchantability = findEnchantability(item);
 		Integer adjustedEnchantLevel = calcAdjustedEnchantLevel(levelCost, enchantability);
 		
-		// current issues:
-		// removeConflictingEnchants() seems to always fails to remove enchants which are conflicting
-		// there is no pattern or logic, just chaos
-		// it seems like it simply ignores  
-		Map<Enchantment, Integer> availableEnchants = getEnchantsPower(item, adjustedEnchantLevel, false); // returns baseEnchantment which fails to be removed by removeConflictingEnchantments
-		availableEnchants = removeConflictingEnchants(availableEnchants, baseEnchant); // this does not remove conflicts properly??????????
+		Map<Enchantment, Integer> availableEnchants = getEnchantsPower(item, adjustedEnchantLevel, false);
+		availableEnchants = removeConflictingEnchants(availableEnchants, baseEnchant);
+		Logging.logError(baseEnchant.toString(), 1);
+		Logging.logError(enchantList.entrySet().toString(), 0);
 		if(availableEnchants == null || availableEnchants.isEmpty()) {
 			return enchantList;
 		}
@@ -47,7 +45,7 @@ public class Enchant {
 		Enchantment nextEnchant = null;
 		
 		while(a < odds) {
-			nextEnchant = getRandomEnchantment(availableEnchants, totalWeight);
+			nextEnchant = getRandomEnchantment(availableEnchants, totalWeight); // somehow this can return null?
 			enchantList.put(nextEnchant, availableEnchants.get(nextEnchant));
 			
 			availableEnchants = removeConflictingEnchants(availableEnchants, nextEnchant);
@@ -61,15 +59,20 @@ public class Enchant {
 			a = Math.random();
 			odds = (double) ((tempAdjusted + 1) / 50);
 		}
+		Logging.logError(baseEnchant.toString(), 1);
+		Logging.logError(enchantList.entrySet().toString(), 0);
 		return enchantList;
 	}
 	
 	@SuppressWarnings("deprecation")
 	private static Enchantment getRandomEnchantment(Map<Enchantment, Integer> enchants, Integer totalWeight) {
 		Integer W = Random.RandomInt(0, totalWeight);
-		for(Map.Entry<Enchantment, Integer> e : enchants.entrySet()) {
-			W = W - Enchantments.valueOf(e.getKey().getName().toString()).getWeight();
-			if(W < 0) {
+		for(Map.Entry<Enchantment, Integer> e : enchants.entrySet()) { // this loop does not work
+			W = W - Enchantments.valueOf(e.getKey().getName().toString()).getWeight(); // 
+			if(W < 0) { // this appears to never go below 0 which should not be possible
+				// possible explanations:
+				// W is calculated incorrectly and therefore can never be lower than 0 even after a full loop
+				// Map.Entry iteration does not work and should be replaced with iterating over keys?
 				return e.getKey();
 			}
 		}
@@ -110,19 +113,19 @@ public class Enchant {
 	}
 	
 	private static Map<Enchantment, Integer> removeConflictingEnchants(Map<Enchantment, Integer> enchantmentList, Enchantment enchantment) {
-		HashMap<Enchantment, Integer> newEnchantmentList = new HashMap<Enchantment, Integer>();
-		Enchantment[] conflicting = getConflicting(enchantment); // this appears to work but only partly?
-		Logging.logError(Arrays.asList(conflicting).toString(), 2);
+		Enchantment[] conflicting = getConflicting(enchantment);
 		if(conflicting == null) {
-			return enchantmentList; // for some ungodly reason it returns this more often than it should
+			return enchantmentList;
 		}
-		for(Map.Entry<Enchantment, Integer> e: enchantmentList.entrySet()) { // attempting to edit enchantmentList or to remove from newEnchantmentList if instanced as enchantmentList causes java.util.ConcurrentModificationException
-			if(e.getKey() != enchantment && !Arrays.asList(conflicting).contains(e.getKey())) { // it ignores the "e.get() != enchantment" with great fucking inconsistency
-				newEnchantmentList.put(e.getKey(),e.getValue());
+		
+		for(Iterator<Map.Entry<Enchantment, Integer>> it = enchantmentList.entrySet().iterator(); it.hasNext();) {
+			Map.Entry<Enchantment, Integer> entry = it.next();
+			if(entry.getKey() == enchantment || Arrays.asList(conflicting).contains(entry.getKey())) {
+				it.remove();
 			}
 		}
 		
-		return newEnchantmentList;
+		return enchantmentList;
 	}
 	
 	@SuppressWarnings("deprecation")

@@ -48,6 +48,7 @@ public class EnchantItem implements Listener {
 			for(Map.Entry<Enchantment, Integer> e : enchants.entrySet()) {
 				baseEnchant = e.getKey();
 				baseEnchantLevel = e.getValue();
+				Logging.logError("onEnchantItem could not locate suitable metadata of enchantment for " + event.getEnchanter().getName() + " enchanting " + event.getItem().getType().toString(), 2);
 				break;
 			}
 		}
@@ -63,9 +64,10 @@ public class EnchantItem implements Listener {
 
 		Map<Enchantment, Integer> newEnchants = Enchant.enchantAtTable(baseEnchant, baseEnchantLevel, event.getExpLevelCost(), event.getItem().getType());
 
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() { // this fails to remove enchantments before applying new ones
 			public void run() {
 				for(Map.Entry<Enchantment, Integer> ench : event.getItem().getEnchantments().entrySet()) {
+					Logging.logError(ench.getKey().toString(), 0); 
 					event.getItem().removeEnchantment(ench.getKey());
 				}
 				event.getItem().addEnchantments(newEnchants);
