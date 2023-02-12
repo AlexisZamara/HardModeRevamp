@@ -1,6 +1,6 @@
 # HardModeRevamp
 (WIP) a Minecraft plugin meant to bring back some difficulty
-#### v0.2.0 - alpha bug fixing phase (enchantments)
+#### v0.2.2 - rebuilding the enchantment system
 
 ## Features (finished)
 - Bed respawns altered
