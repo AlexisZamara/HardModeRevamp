@@ -15,7 +15,11 @@ import ratatoskr.hardModeRevamp.utils.Random;
 public class Enchant {
 	
 	// decided not to replace enchantments in the GUI and instead opted to directly reroll enchantments after choosing. 
-	// Players will just be informed that Fortune is always converted into Silk Touch 
+	// Players will just be informed that Fortune is always converted into Silk Touch
+	// TODO: fix the enchantment of books:
+	// add book enchantments to RConstants
+	// fix findEnchantability for books
+	// fix availableEnchants for books
 	public static Map<Enchantment, Integer> enchantAtTable(Enchantment baseEnchant, Integer baseEnchantPower, Integer levelCost, Material item) {
 		HashMap<Enchantment, Integer> enchantList = new HashMap<Enchantment, Integer>();
 		
@@ -31,8 +35,7 @@ public class Enchant {
 		
 		Map<Enchantment, Integer> availableEnchants = getEnchantsPower(item, adjustedEnchantLevel, false);
 		availableEnchants = removeConflictingEnchants(availableEnchants, baseEnchant);
-		Logging.logError(baseEnchant.toString(), 1);
-		Logging.logError(enchantList.entrySet().toString(), 0);
+		
 		if(availableEnchants == null || availableEnchants.isEmpty()) {
 			return enchantList;
 		}
@@ -45,7 +48,7 @@ public class Enchant {
 		Enchantment nextEnchant = null;
 		
 		while(a < odds) {
-			nextEnchant = getRandomEnchantment(availableEnchants, totalWeight); // somehow this can return null?
+			nextEnchant = getRandomEnchantment(availableEnchants, totalWeight);
 			enchantList.put(nextEnchant, availableEnchants.get(nextEnchant));
 			
 			availableEnchants = removeConflictingEnchants(availableEnchants, nextEnchant);
@@ -59,21 +62,16 @@ public class Enchant {
 			a = Math.random();
 			odds = (double) ((tempAdjusted + 1) / 50);
 		}
-		Logging.logError(baseEnchant.toString(), 1);
-		Logging.logError(enchantList.entrySet().toString(), 0);
 		return enchantList;
 	}
 	
 	@SuppressWarnings("deprecation")
 	private static Enchantment getRandomEnchantment(Map<Enchantment, Integer> enchants, Integer totalWeight) {
-		Integer W = Random.RandomInt(0, totalWeight);
-		for(Map.Entry<Enchantment, Integer> e : enchants.entrySet()) { // this loop does not work
-			W = W - Enchantments.valueOf(e.getKey().getName().toString()).getWeight(); // 
-			if(W < 0) { // this appears to never go below 0 which should not be possible
-				// possible explanations:
-				// W is calculated incorrectly and therefore can never be lower than 0 even after a full loop
-				// Map.Entry iteration does not work and should be replaced with iterating over keys?
-				return e.getKey();
+		Integer W = (int) (Math.random() * totalWeight); // any integer in the range: [0,totalWeight)
+		for(Enchantment key : enchants.keySet()) {
+			W = W - Enchantments.valueOf(key.getName().toString()).getWeight();
+			if(W < 0) {
+				return key;
 			}
 		}
 		return null;
@@ -115,12 +113,19 @@ public class Enchant {
 	private static Map<Enchantment, Integer> removeConflictingEnchants(Map<Enchantment, Integer> enchantmentList, Enchantment enchantment) {
 		Enchantment[] conflicting = getConflicting(enchantment);
 		if(conflicting == null) {
+			for(Iterator<Map.Entry<Enchantment, Integer>> it = enchantmentList.entrySet().iterator(); it.hasNext();) {
+				Map.Entry<Enchantment, Integer> entry = it.next();
+				if(entry.getKey().getName() == enchantment.getName()) {
+					it.remove();
+					break;
+				}
+			}
 			return enchantmentList;
 		}
 		
 		for(Iterator<Map.Entry<Enchantment, Integer>> it = enchantmentList.entrySet().iterator(); it.hasNext();) {
 			Map.Entry<Enchantment, Integer> entry = it.next();
-			if(entry.getKey() == enchantment || Arrays.asList(conflicting).contains(entry.getKey())) {
+			if(entry.getKey().getName() == enchantment.getName() || Arrays.asList(conflicting).contains(entry.getKey())) {
 				it.remove();
 			}
 		}

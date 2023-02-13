@@ -64,13 +64,15 @@ public class EnchantItem implements Listener {
 
 		Map<Enchantment, Integer> newEnchants = Enchant.enchantAtTable(baseEnchant, baseEnchantLevel, event.getExpLevelCost(), event.getItem().getType());
 
-		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() { // this fails to remove enchantments before applying new ones
+		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			public void run() {
 				for(Map.Entry<Enchantment, Integer> ench : event.getItem().getEnchantments().entrySet()) {
-					Logging.logError(ench.getKey().toString(), 0); 
+					Logging.logError("removing: " + ench.getKey().toString() + " at level " + String.valueOf(ench.getValue()), 0); 
 					event.getItem().removeEnchantment(ench.getKey());
 				}
-				event.getItem().addEnchantments(newEnchants);
+				Logging.logError("item still has enchants: " + event.getItem().getEnchantments().keySet().toString(), 1);
+				event.getItem().addEnchantments(newEnchants); // this does not work when enchanting books
+				// event.getItem().addUnsafeEnchantments(newEnchants); solution to enchant books?
 			}
 		}, 1L);
 		return;

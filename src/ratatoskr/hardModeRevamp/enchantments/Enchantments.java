@@ -3,7 +3,7 @@ package ratatoskr.hardModeRevamp.enchantments;
 import org.bukkit.enchantments.Enchantment;
 
 public enum Enchantments {
-	
+	// TODO: make Mending incompatible with every single enchantment in the list
 	ARROW_DAMAGE(Enchantment.ARROW_DAMAGE, 10, null, new Integer[] {1, 11, 21, 31, 41}, new Integer[] {16, 26, 36, 46, 56}, false),
 	ARROW_FIRE(Enchantment.ARROW_FIRE, 2, new Enchantment[] {Enchantment.ARROW_INFINITE, Enchantment.MENDING, Enchantment.DURABILITY}, new Integer[] {20}, new Integer[] {50}, false),
 	ARROW_INFINITE(Enchantment.ARROW_INFINITE, 1, new Enchantment[] {Enchantment.ARROW_FIRE, Enchantment.MENDING, Enchantment.DURABILITY}, new Integer[] {20}, new Integer[] {50}, false),
