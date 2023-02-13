@@ -74,10 +74,9 @@
 - respawning at a bed now spawns the player on the surface within a 128-block radius around the bed's location
 
 ### Enchantment Changes
-- enchantments now much more exclusive with each other
-- fewer total possible enchantments on tools, armors and weapons
-- Mending and Unbreaking made exclusive with most enchantments
-- Fortune (all levels) removed from the game
+- Fortune removed from the game
+- Mending removed from the game
+- Unbreaking made incompatible with more enchantments
 
 #### Hostile Mob Changes
 - all hostile mobs:
