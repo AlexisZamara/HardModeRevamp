@@ -8,18 +8,13 @@ import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 
-import ratatoskr.hardModeRevamp.logger.Logging;
 import ratatoskr.hardModeRevamp.utils.RConstants;
 import ratatoskr.hardModeRevamp.utils.Random;
 
 public class Enchant {
 	
-	// decided not to replace enchantments in the GUI and instead opted to directly reroll enchantments after choosing. 
+	// decided not to replace enchantments in the GUI and instead opted to simply reroll enchantments after choosing. 
 	// Players will just be informed that Fortune is always converted into Silk Touch
-	// TODO: fix the enchantment of books:
-	// add book enchantments to RConstants
-	// fix findEnchantability for books
-	// fix availableEnchants for books
 	public static Map<Enchantment, Integer> enchantAtTable(Enchantment baseEnchant, Integer baseEnchantPower, Integer levelCost, Material item) {
 		HashMap<Enchantment, Integer> enchantList = new HashMap<Enchantment, Integer>();
 		
@@ -34,7 +29,7 @@ public class Enchant {
 		Integer adjustedEnchantLevel = calcAdjustedEnchantLevel(levelCost, enchantability);
 		
 		Map<Enchantment, Integer> availableEnchants = getEnchantsPower(item, adjustedEnchantLevel, false);
-		availableEnchants = removeConflictingEnchants(availableEnchants, baseEnchant);
+		availableEnchants = removeConflictingEnchants(availableEnchants, baseEnchant, item);
 		
 		if(availableEnchants == null || availableEnchants.isEmpty()) {
 			return enchantList;
@@ -51,7 +46,7 @@ public class Enchant {
 			nextEnchant = getRandomEnchantment(availableEnchants, totalWeight);
 			enchantList.put(nextEnchant, availableEnchants.get(nextEnchant));
 			
-			availableEnchants = removeConflictingEnchants(availableEnchants, nextEnchant);
+			availableEnchants = removeConflictingEnchants(availableEnchants, nextEnchant, item);
 			if(availableEnchants == null || availableEnchants.isEmpty()) {
 				break;
 			}
@@ -62,6 +57,12 @@ public class Enchant {
 			a = Math.random();
 			odds = (double) ((tempAdjusted + 1) / 50);
 		}
+		
+		if(item == Material.BOOK && enchantList.size() > 1) { 
+			// "When enchanting books using an enchanting table, if multiple enchantments were generated, then one selected at random is removed from the final list."
+			enchantList.remove(nextEnchant);
+		}
+		
 		return enchantList;
 	}
 	
@@ -110,9 +111,9 @@ public class Enchant {
 		return enchantPower;
 	}
 	
-	private static Map<Enchantment, Integer> removeConflictingEnchants(Map<Enchantment, Integer> enchantmentList, Enchantment enchantment) {
+	private static Map<Enchantment, Integer> removeConflictingEnchants(Map<Enchantment, Integer> enchantmentList, Enchantment enchantment, Material item) {
 		Enchantment[] conflicting = getConflicting(enchantment);
-		if(conflicting == null) {
+		if(conflicting == null || item == Material.BOOK) {
 			for(Iterator<Map.Entry<Enchantment, Integer>> it = enchantmentList.entrySet().iterator(); it.hasNext();) {
 				Map.Entry<Enchantment, Integer> entry = it.next();
 				if(entry.getKey().getName() == enchantment.getName()) {
@@ -221,6 +222,9 @@ public class Enchant {
 		}
 		else if(item == Material.FISHING_ROD) {
 			enchantList = RConstants.FISHING_ROD_ENCHANTMENTS;
+		}
+		else if(item == Material.BOOK) {
+			enchantList = RConstants.BOOK_ENCHANTMENTS;
 		}
 		
 		return enchantList;

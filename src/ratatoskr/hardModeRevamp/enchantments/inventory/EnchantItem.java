@@ -71,8 +71,11 @@ public class EnchantItem implements Listener {
 					event.getItem().removeEnchantment(ench.getKey());
 				}
 				Logging.logError("item still has enchants: " + event.getItem().getEnchantments().keySet().toString(), 1);
-				event.getItem().addEnchantments(newEnchants); // this does not work when enchanting books
-				// event.getItem().addUnsafeEnchantments(newEnchants); solution to enchant books?
+				if(event.getItem().getType() == Material.BOOK) {
+					event.getItem().addUnsafeEnchantments(newEnchants);
+					return;
+				}
+				event.getItem().addEnchantments(newEnchants);
 			}
 		}, 1L);
 		return;
