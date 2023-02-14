@@ -11,13 +11,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import ratatoskr.hardModeRevamp.enchantments.Enchantments;
 import ratatoskr.hardModeRevamp.logger.Logging;
 import ratatoskr.hardModeRevamp.utils.RConstants;
 
 public class PrepareAnvil implements Listener {
-	// entirely untested
+	// these seems to be no way to access the list of enchantments present on a book while in this inventory?
+	// meta.getEnchants() returns an empty Map, item.getEnchantments() also returns an empty Map, attempting to convert the meta to (EnchantmentStorageMeta) returns a CraftBukkit error
+	// stumped on this one
+	// TODO: fix enchanted books by hiding the enchantments in the item meta for this purpose only?
 	@EventHandler
 	public void onPrepareAnvilEvent(PrepareAnvilEvent event) {
 		if(event.getResult() == null) {
@@ -26,52 +30,66 @@ public class PrepareAnvil implements Listener {
 		if(event.getInventory().getItem(0) == null || event.getInventory().getItem(1) == null) {
 			return;
 		}
-		Logging.logError("item slot 0: " + event.getInventory().getItem(0).getType().toString(), 0);
-		Logging.logError("item slot 1: " + event.getInventory().getItem(1).getType().toString(), 0);
-		Logging.logError("item slot 2: " + event.getInventory().getItem(2).getType().toString(), 0);
-		
-		if(!isItemAllowed(event.getInventory().getItem(0).getType()) || !isItemAllowed(event.getInventory().getItem(1).getType())) {
+		if(event.getInventory().getItem(0).getType() == Material.ENCHANTED_BOOK && event.getInventory().getItem(1).getType() == Material.ENCHANTED_BOOK) {
 			return;
 		}
 		
-		if(!hasEnchants(event.getInventory().getItem(0))) {
-			if(event.getInventory().getItem(1).getType() != Material.BOOK) {
+		if(!isItemAllowed(event.getInventory().getItem(0).getType()) || !isItemAllowed(event.getInventory().getItem(1).getType())) {
+			Logging.logError("one of these is not allowed", 2);
+			return;
+		}
+		
+		ItemStack firstItem = event.getInventory().getItem(0);
+		ItemStack secondItem = event.getInventory().getItem(1);
+		ItemStack result = event.getResult();
+		
+		if(!hasEnchants(firstItem)) {
+			if(secondItem.getType() != Material.ENCHANTED_BOOK) {
+				Logging.logError("second item is not a book and first item is not enchanted", 0);
 				return;
 			}
 		}
-		if(!hasEnchants(event.getInventory().getItem(1))) {
+		if(!hasEnchants(secondItem)) {
+			Logging.logError("second item has no enchants", 0);
 			return;
 		}
 		
-		Map<Enchantment, Integer> mergedEnchants = mergeEnchantments(event.getInventory().getItem(0), event.getInventory().getItem(1));
+		Map<Enchantment, Integer> mergedEnchants = mergeEnchantments(firstItem, secondItem); // handle enchantments for item + book
 		Logging.logError("enchant result: " + mergedEnchants.entrySet().toString(), 0);
 		
-		ItemStack result = event.getResult();
-		
-		for(Map.Entry<Enchantment, Integer> ench : event.getResult().getEnchantments().entrySet()) {
-			result.removeEnchantment(ench.getKey());
+		if(mergedEnchants.keySet() != result.getEnchantments().keySet()) {
+			for(Map.Entry<Enchantment, Integer> ench : result.getEnchantments().entrySet()) {
+				result.removeEnchantment(ench.getKey());
+			}
+			
+			result.addUnsafeEnchantments(mergedEnchants);
+			event.setResult(result);
 		}
-		result.addEnchantments(mergedEnchants);
-		event.setResult(result);
 	}
 	
 	private static boolean isItemAllowed(Material item) {
-		if(item == Material.BOOK || Arrays.asList(RConstants.ANVIL_ITEMS).contains(item)) {
+		if(item == Material.ENCHANTED_BOOK || Arrays.asList(RConstants.ANVIL_ITEMS).contains(item)) {
 			return true;
 		}
 		return false;
 	}
 	
 	private static boolean hasEnchants(ItemStack item) {
+		if(item.getType() == Material.ENCHANTED_BOOK) {
+			return true;
+		}
+		Logging.logError(item.getType().toString() + " " + String.valueOf(item.getEnchantments().size()), 0);
 		if(item.getEnchantments().size() > 0) {
 			return true;
 		}
 		return false;
 	}
 	
-	private static Map<Enchantment, Integer> mergeEnchantments(ItemStack firstItem, ItemStack secondItem) { // replace maps with ItemStack
-		Map<Enchantment, Integer> firstSlot = firstItem.getEnchantments();
-		Map<Enchantment, Integer> secondSlot = secondItem.getEnchantments();
+	private static Map<Enchantment, Integer> mergeEnchantments(ItemStack firstItem, ItemStack secondItem) {
+		ItemMeta firstMeta = firstItem.getItemMeta();
+		ItemMeta secondMeta = secondItem.getItemMeta();
+		Map<Enchantment, Integer> firstSlot = firstMeta.getEnchants();
+		Map<Enchantment, Integer> secondSlot = secondMeta.getEnchants(); // this does not work for books for some ungodly reason
 		Map<Enchantment, Integer> merged = new HashMap<Enchantment, Integer>();
 		
 		for(Enchantment baseEnch : firstSlot.keySet()) {
@@ -151,7 +169,7 @@ public class PrepareAnvil implements Listener {
 		else if(item == Material.FISHING_ROD) {
 			return RConstants.FISHING_ROD_ENCHANTMENTS;
 		}
-		else if(item == Material.BOOK) {
+		else if(item == Material.ENCHANTED_BOOK) {
 			return RConstants.BOOK_ENCHANTMENTS;
 		}
 		else {

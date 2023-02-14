@@ -15,13 +15,13 @@ public class Enchant {
 	
 	// decided not to replace enchantments in the GUI and instead opted to simply reroll enchantments after choosing. 
 	// Players will just be informed that Fortune is always converted into Silk Touch
+	@SuppressWarnings("deprecation")
 	public static Map<Enchantment, Integer> enchantAtTable(Enchantment baseEnchant, Integer baseEnchantPower, Integer levelCost, Material item) {
 		HashMap<Enchantment, Integer> enchantList = new HashMap<Enchantment, Integer>();
 		
-		if(baseEnchant == Enchantment.LOOT_BONUS_BLOCKS) {
+		if(baseEnchant.getName() == Enchantment.LOOT_BONUS_BLOCKS.getName()) {
 			baseEnchant = Enchantment.SILK_TOUCH;
 			baseEnchantPower = 1;
-			
 		}
 		enchantList.put(baseEnchant, baseEnchantPower);
 		
