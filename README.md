@@ -1,6 +1,6 @@
 # HardModeRevamp
 (WIP) a Minecraft plugin meant to bring back some difficulty
-#### v0.2.2 - rebuilding the enchantment system
+#### v0.3.0 - enchantment system rebalance complete - loot table rework starts
 
 ## Features (finished)
 - Bed respawns altered
@@ -23,6 +23,7 @@
 
 ## Features (untested)
 - Log players destroying another player's block
+- Enchantment table rebalance
 
 ## Known Issues:
 - Elytra flight:
@@ -32,10 +33,8 @@
 - Stamina:
   - player sprint ends when food bar reaches 6/20
 
-## Features (planned?)
+## Features (planned)
 - Taking damage while regenerating health suspends or cancels health regeneration for a few seconds
-- Enchantment overhaul
-- Adding curses at the enchantment table
 - Reworked loot chest balance by lowering odds of Diamonds and Diamond gear in chests (or completely removing them)
 
 
@@ -67,16 +66,26 @@
   - axe damage returned to 1.8.1 values (base fist damage +1, total of one heart of damage)
   - sword damage reduced by 1 (or half a heart)
   
+#### Loot Table Changes (planned):
+- diamonds removed from chest loot tables
+  - end chests may still generate diamonds
+- enchanted items obtained from fishing have an 87.5% chance of having a curse
+  - this curse is added after all enchantments are rolled, an enchanted book may still receive a curse from natural generation
+- enchanted items obtained from end city chests have a 5% chance of having a curse
+  - any curse rolled is removed and replaced with a normal enchantment if the item was not selected to have a curse
+- phantom membranes (1-3) added to end chests
+
 #### Gameplay Changes
 - creeper explosions always cause blocks placed by a player to drop when destroyed 
   - the dropped items may still be destroyed by a different creeper explosion
 - night can no longer be skipped
 - respawning at a bed now spawns the player on the surface within a 128-block radius around the bed's location
 
-### Enchantment Changes
+#### Enchantment Changes
 - Fortune removed from the game
 - Mending removed from the game
-- Unbreaking made incompatible with more enchantments
+- Unbreaking now harder to obtain at the Enchanting Table
+  - minimum enchanting level increased to 13/23/33 from 8/13/21
 
 #### Hostile Mob Changes
 - all hostile mobs:
@@ -130,6 +139,3 @@
 | EMERALD | PAINTING | 1:16 |
 | EMERALD | SCUTE | 1:1 |
 | EMERALD | SUSPICIOUS STEW | 1:1 |
-
-### Reworked Enchantment Table
-full table of changes will be added after the enchantment rework is complete
