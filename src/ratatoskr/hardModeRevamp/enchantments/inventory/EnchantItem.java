@@ -3,7 +3,9 @@ package ratatoskr.hardModeRevamp.enchantments.inventory;
 import ratatoskr.hardModeRevamp.Main;
 import ratatoskr.hardModeRevamp.enchantments.Enchant;
 import ratatoskr.hardModeRevamp.logger.Logging;
+import ratatoskr.hardModeRevamp.utils.RConstants;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -24,6 +26,9 @@ public class EnchantItem implements Listener {
 	@EventHandler
 	public void onEnchantItem(EnchantItemEvent event) {
 		if(event.getEnchantBlock().getType() != Material.ENCHANTING_TABLE) {
+			return;
+		}
+		if(event.getItem().getType() != Material.BOOK && !Arrays.asList(RConstants.ENCHANTABLE).contains(event.getItem().getType())) {
 			return;
 		}
 		
@@ -62,7 +67,7 @@ public class EnchantItem implements Listener {
 			return;
 		}
 
-		Map<Enchantment, Integer> newEnchants = Enchant.enchantAtTable(baseEnchant, baseEnchantLevel, event.getExpLevelCost(), event.getItem().getType());
+		Map<Enchantment, Integer> newEnchants = Enchant.enchantAtTable(enchants, baseEnchant, baseEnchantLevel, event.getExpLevelCost(), event.getItem().getType());
 
 		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			public void run() {
@@ -84,6 +89,9 @@ public class EnchantItem implements Listener {
 	@EventHandler
 	public void onPrepareEnchantItem(PrepareItemEnchantEvent event) {
 		if(event.getEnchantBlock().getType() != Material.ENCHANTING_TABLE) {
+			return;
+		}
+		if(event.getItem().getType() == Material.BOOK) {
 			return;
 		}
 		String metaName = "r_" + event.getEnchanter().getName();
