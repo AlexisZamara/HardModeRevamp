@@ -15,7 +15,7 @@ public enum Enchantments {
 	DAMAGE_UNDEAD(Enchantment.DAMAGE_UNDEAD, 5, new Enchantment[] {Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_ARTHROPODS}, new Integer[] {5, 13, 21, 29, 37}, new Integer[] {25, 33, 41, 49, 57}, false),
 	DEPTH_STRIDER(Enchantment.DEPTH_STRIDER, 2, new Enchantment[] {Enchantment.FROST_WALKER}, new Integer[] {10, 20, 30}, new Integer[] {25, 35, 45}, false),
 	DIG_SPEED(Enchantment.DIG_SPEED, 10, null, new Integer[] {1, 11, 21, 31, 41}, new Integer[] {51, 61, 71, 81, 91}, false),
-	DURABILITY(Enchantment.DURABILITY, 5, null,  new Integer[] {13, 23, 33}, new Integer[] {55, 63, 71}, false), // minimum level increased from {8, 13, 21}
+	DURABILITY(Enchantment.DURABILITY, 5, null,  new Integer[] {13, 25, 37}, new Integer[] {55, 63, 71}, false), // minimum level increased from {8, 13, 21}
 	FIRE_ASPECT(Enchantment.FIRE_ASPECT, 2, null, new Integer[] {10, 30}, new Integer[] {60, 80}, false),
 	FROST_WALKER(Enchantment.FROST_WALKER, 2, new Enchantment[] {Enchantment.DEPTH_STRIDER}, new Integer[] {10, 20}, new Integer[] {25, 35}, false),
 	IMPALING(Enchantment.IMPALING, 2, null, new Integer[] {1, 9, 17, 25, 33}, new Integer[] {21, 29, 37, 45, 53}, false),

@@ -14,7 +14,7 @@ import ratatoskr.hardModeRevamp.utils.Random;
 public class Enchant {
 	
 	// decided not to replace enchantments in the GUI and instead opted to simply reroll enchantments after choosing. 
-	// Players will just be informed that Fortune is always converted into Silk Touch
+	// Players will just be informed that Fortune is always converted into Silk Touch and Unbreaking III converted into Unbreaking II 
 	@SuppressWarnings("deprecation")
 	public static Map<Enchantment, Integer> enchantAtTable(Map<Enchantment, Integer> enchantsToAdd, Enchantment baseEnchant, Integer baseEnchantPower, Integer levelCost, Material item) {
 		HashMap<Enchantment, Integer> enchantList = new HashMap<Enchantment, Integer>();
@@ -37,6 +37,9 @@ public class Enchant {
 		if(baseEnchant.getName() == Enchantment.LOOT_BONUS_BLOCKS.getName()) {
 			baseEnchant = Enchantment.SILK_TOUCH;
 			baseEnchantPower = 1;
+		}
+		if(baseEnchant.getName() == Enchantment.DURABILITY.getName() && baseEnchantPower > 2) {
+			baseEnchantPower = 2;
 		}
 		enchantList.put(baseEnchant, baseEnchantPower);
 		

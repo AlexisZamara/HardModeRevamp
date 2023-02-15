@@ -63,7 +63,7 @@ public class EnchantItem implements Listener {
 		}
 				
 		if(baseEnchant == null) {
-			Logging.logError("could not find an enchantment in the list of enchantments to add to the item", 2);
+			Logging.logError("could not find an enchantment in the list of enchantments to add to " + event.getItem().getType().toString(), 2);
 			return;
 		}
 
@@ -72,10 +72,8 @@ public class EnchantItem implements Listener {
 		Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			public void run() {
 				for(Map.Entry<Enchantment, Integer> ench : event.getItem().getEnchantments().entrySet()) {
-					Logging.logError("removing: " + ench.getKey().toString() + " at level " + String.valueOf(ench.getValue()), 0); 
 					event.getItem().removeEnchantment(ench.getKey());
 				}
-				Logging.logError("item still has enchants: " + event.getItem().getEnchantments().keySet().toString(), 1);
 				if(event.getItem().getType() == Material.BOOK) {
 					event.getItem().addUnsafeEnchantments(newEnchants);
 					return;
@@ -89,9 +87,6 @@ public class EnchantItem implements Listener {
 	@EventHandler
 	public void onPrepareEnchantItem(PrepareItemEnchantEvent event) {
 		if(event.getEnchantBlock().getType() != Material.ENCHANTING_TABLE) {
-			return;
-		}
-		if(event.getItem().getType() == Material.BOOK) {
 			return;
 		}
 		String metaName = "r_" + event.getEnchanter().getName();

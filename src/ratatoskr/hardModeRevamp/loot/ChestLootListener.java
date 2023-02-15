@@ -18,7 +18,7 @@ import org.bukkit.inventory.EquipmentSlot;
 
 public class ChestLootListener implements Listener {
 	// chests
-	// TODO: listener for Hopper and Hopper Minecart
+	// TODO: listener for Hopper Minecart
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
 		if(event.getBlock().getType() != Material.HOPPER) {
@@ -58,6 +58,7 @@ public class ChestLootListener implements Listener {
 	}
 	
 	// minecart chests
+	// TODO: listener for Hopper
 	@EventHandler
 	public void onVehicleDestroy(VehicleDestroyEvent event) {
 		ChestLoot.populateChestMinecartLoot(event.getVehicle());
