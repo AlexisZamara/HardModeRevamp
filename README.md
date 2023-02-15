@@ -1,6 +1,7 @@
 # HardModeRevamp
-(WIP) a Minecraft plugin meant to bring back some difficulty
-#### v0.3.0 - enchantment system rebalance complete - loot table rework starts
+(WIP) a Minecraft plugin for 1.16.5 to make things just a bit more difficult and make grinding a part of the game again
+
+#### v0.3.1 - the loot rework
 
 ## Features (finished)
 - Bed respawns altered
@@ -24,6 +25,9 @@
 ## Features (untested)
 - Log players destroying another player's block
 - Enchantment table rebalance
+- Loot chests rebalanced
+- Fishing rebalanced
+- Mending and Fortune can no longer be obtained
 
 ## Known Issues:
 - Elytra flight:
@@ -35,8 +39,6 @@
 
 ## Features (planned)
 - Taking damage while regenerating health suspends or cancels health regeneration for a few seconds
-- Reworked loot chest balance by lowering odds of Diamonds and Diamond gear in chests (or completely removing them)
-
 
 ## Changelog
 #### Player Changes
@@ -66,14 +68,11 @@
   - axe damage returned to 1.8.1 values (base fist damage +1, total of one heart of damage)
   - sword damage reduced by 1 (or half a heart)
   
-#### Loot Table Changes (planned):
-- diamonds removed from chest loot tables
-  - end chests may still generate diamonds
+#### Loot Table Changes:
+- diamonds removed from loot chests outside The End
 - enchanted items obtained from fishing have an 87.5% chance of having a curse
-  - this curse is added after all enchantments are rolled, an enchanted book may still receive a curse from natural generation
 - enchanted items obtained from end city chests have a 5% chance of having a curse
-  - any curse rolled is removed and replaced with a normal enchantment if the item was not selected to have a curse
-- phantom membranes (1-3) added to end chests
+- phantom membranes (1-6) added to loot chests in The End
 
 #### Gameplay Changes
 - creeper explosions always cause blocks placed by a player to drop when destroyed 
