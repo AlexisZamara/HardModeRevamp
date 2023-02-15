@@ -1,6 +1,5 @@
 package ratatoskr.hardModeRevamp.loot;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -57,34 +56,28 @@ public class ChestLoot {
 				continue;
 			}
 			
-			Map<Enchantment, Integer> newEnchants = new HashMap<Enchantment, Integer>();
-			Double curse = Math.random();
-			
 			for(Map.Entry<Enchantment, Integer> entry : meta.getEnchants().entrySet()) {
 				if(entry.getKey().getName() == Enchantment.LOOT_BONUS_BLOCKS.getName()) {
-					newEnchants.put(Enchantment.SILK_TOUCH, 1);
+					Logging.logError("removing Fortune from " + item.getType().toString(), 0);
 					meta.removeEnchant(entry.getKey());
+					meta.addEnchant(Enchantment.SILK_TOUCH, 1, false);
 					continue;
 				}
 				if(entry.getKey().getName() == Enchantment.MENDING.getName()) {
 					Logging.logError("removing Memding from " + item.getType().toString(), 0);
-					newEnchants.put(Enchantment.DURABILITY, 3);
 					meta.removeEnchant(entry.getKey());
+					meta.addEnchant(Enchantment.DURABILITY, 3, false);
 					continue;
 				}
 				if(entry.getKey().getName() == Enchantment.BINDING_CURSE.getName() || entry.getKey().getName() == Enchantment.VANISHING_CURSE.getName()) {
-					if(curse > 0.05 && block.getLocation().getWorld().getEnvironment() == Environment.THE_END) {
+					if(Math.random() > 0.05 && block.getLocation().getWorld().getEnvironment() == Environment.THE_END) {
 						Logging.logError("removing " + entry.getKey().getName() + " from " + item.getType().toString(), 0);
 						meta.removeEnchant(entry.getKey());
 						continue;
 					}
 				}
-				newEnchants.put(entry.getKey(), entry.getValue());
-				meta.removeEnchant(entry.getKey());
 			}
-			Logging.logError("new enchantments for " + item.getType().toString() + " = " + newEnchants.entrySet().toString(), 0);
 			item.setItemMeta(meta);
-			item.addUnsafeEnchantments(newEnchants);
 		}
 	}
 	
@@ -97,6 +90,7 @@ public class ChestLoot {
 		return false;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static void populateChestMinecartLoot(Entity entity) {
 		if(!isNewLootCart(entity)) {
 			return;
@@ -115,26 +109,22 @@ public class ChestLoot {
 				continue;
 			}
 			
-			Map<Enchantment, Integer> newEnchants = new HashMap<Enchantment, Integer>();
-			
 			for(Map.Entry<Enchantment, Integer> entry : meta.getEnchants().entrySet()) {
 				if(entry.getKey().getName() == Enchantment.LOOT_BONUS_BLOCKS.getName()) {
-					newEnchants.put(Enchantment.SILK_TOUCH, 1);
+					Logging.logError("removing Fortune from " + item.getType().toString(), 0);
 					meta.removeEnchant(entry.getKey());
+					meta.addEnchant(Enchantment.SILK_TOUCH, 1, false);
 					continue;
 				}
 				if(entry.getKey().getName() == Enchantment.MENDING.getName()) {
 					Logging.logError("removing Memding from " + item.getType().toString(), 0);
-					newEnchants.put(Enchantment.DURABILITY, 3);
 					meta.removeEnchant(entry.getKey());
+					meta.addEnchant(Enchantment.DURABILITY, 3, false);
 					continue;
 				}
-				newEnchants.put(entry.getKey(), entry.getValue());
-				meta.removeEnchant(entry.getKey());
 			}
-			Logging.logError("new enchantments for " + item.getType().toString() + " = " + newEnchants.entrySet().toString(), 0);
+
 			item.setItemMeta(meta);
-			item.addUnsafeEnchantments(newEnchants);
 		}
 	}
 	

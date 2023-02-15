@@ -4,7 +4,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Hopper;
-import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -18,7 +17,6 @@ import org.bukkit.inventory.EquipmentSlot;
 
 public class ChestLootListener implements Listener {
 	// chests
-	// TODO: listener for Hopper Minecart
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent event) {
 		if(event.getBlock().getType() != Material.HOPPER) {
@@ -58,7 +56,6 @@ public class ChestLootListener implements Listener {
 	}
 	
 	// minecart chests
-	// TODO: listener for Hopper
 	@EventHandler
 	public void onVehicleDestroy(VehicleDestroyEvent event) {
 		ChestLoot.populateChestMinecartLoot(event.getVehicle());
