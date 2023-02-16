@@ -1,7 +1,6 @@
 package ratatoskr.hardModeRevamp.loot;
 
-import java.util.Map;
-
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
@@ -13,7 +12,8 @@ import ratatoskr.hardModeRevamp.logger.Logging;
 
 public class PlayerFish implements Listener {
 	
-	@SuppressWarnings("deprecation")
+	// ENCHANTED_BOOK is not detected using meta.getEnchants()
+	// SOLUTION? bruteforce with item.removeEnchant()
 	@EventHandler
 	public void onPlayerFish(PlayerFishEvent event) {
 		if(event.getState() == PlayerFishEvent.State.CAUGHT_FISH) {
@@ -21,33 +21,27 @@ public class PlayerFish implements Listener {
 			ItemMeta meta = item.getItemStack().getItemMeta();
 			Logging.logError("caught " + item.getItemStack().getType(), 0);
 			
-			if(!meta.hasEnchants()) {
+			if(!meta.hasEnchants() && item.getItemStack().getType() != Material.ENCHANTED_BOOK) {
 				return;
 			}
-			boolean curse = false;
-			
-			for(Map.Entry<Enchantment, Integer> entry : meta.getEnchants().entrySet()) {
-				if(entry.getKey().getName() == Enchantment.MENDING.getName()) {
-					Logging.logError("removing Mending from " + item.getItemStack().getType().toString(), 0);
-					meta.removeEnchant(entry.getKey());
-					meta.addEnchant(Enchantment.DURABILITY, 3, false);
-					continue;
-				}
-				if(entry.getKey().getName() == Enchantment.LOOT_BONUS_BLOCKS.getName()) {
+			Logging.logError("has enchants", 0);
+			Integer remove = item.getItemStack().removeEnchantment(Enchantment.MENDING);
+			if(remove == 0) {
+				Logging.logError("removing Mending from " + item.getItemStack().getType().toString(), 0);
+				item.getItemStack().addUnsafeEnchantment(Enchantment.DURABILITY, 3);
+			}
+			remove = item.getItemStack().removeEnchantment(Enchantment.LOOT_BONUS_BLOCKS);
+				if(remove == 0) {
 					Logging.logError("removing Fortune from " + item.getItemStack().getType().toString(), 0);
-					meta.removeEnchant(entry.getKey());
-					meta.addEnchant(Enchantment.SILK_TOUCH, 1, false);
-					continue;
-				}
-				if(entry.getKey().getName() == Enchantment.BINDING_CURSE.getName() || entry.getKey().getName() == Enchantment.VANISHING_CURSE.getName()) {
-					curse = true;
+					item.getItemStack().addUnsafeEnchantment(Enchantment.SILK_TOUCH, 1);
+			}
+			if(Math.random() < 0.875) {
+				Logging.logError("rolled for a curse", 0);
+				if(!item.getItemStack().containsEnchantment(Enchantment.BINDING_CURSE) && !item.getItemStack().containsEnchantment(Enchantment.VANISHING_CURSE)) {
+					Logging.logError("adding curse", 0);
+					item.getItemStack().addUnsafeEnchantment(Enchantment.VANISHING_CURSE, 1);
 				}
 			}
-			if(Math.random() > 0.875 && !curse) {
-				Logging.logError("adding curse of vanishing to " + item.getType().toString(), 0);
-				meta.addEnchant(Enchantment.VANISHING_CURSE, 1, false);
-			}
-			item.getItemStack().setItemMeta(meta);
 		}
 	}
 }

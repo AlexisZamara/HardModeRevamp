@@ -1,6 +1,5 @@
 package ratatoskr.hardModeRevamp.loot;
 
-import java.util.Map;
 import java.util.Random;
 
 import org.bukkit.Material;
@@ -21,8 +20,12 @@ import ratatoskr.hardModeRevamp.logger.Logging;
 
 public class ChestLoot {
 	
-	// currently untested
-	@SuppressWarnings("deprecation")
+	// item = null does not remove the item
+	// SOLUTION? accessing the block inventory and removing the item from the slot specifically?
+	// item = new ItemSteck does not add an item
+	// SOLUTION? accessing the block inventory and adding an item to the slot specifically?
+	// meta.hasEnchant() doesn't detect ENCHANTED_BOOK again, 
+	// SOLUTION? bruteforce item.removeEnchant()
 	public static void populateChestLoot(Block block) {
 		if(!isNewLootChest(block)) {
 			return;
@@ -39,45 +42,38 @@ public class ChestLoot {
 					continue;
 				}
 				if(membrane > 0) {
-					Logging.logError("adding phantom membrane to end chest", 0);
-					item = new ItemStack(Material.PHANTOM_MEMBRANE, membrane);
+					Logging.logError("adding " + membrane + " phantom membrane to end chest", 0);
+					inv.addItem(new ItemStack(Material.PHANTOM_MEMBRANE, membrane));
 					membrane--;
 				}
 				continue;
 			}
 			if(item.getType() == Material.DIAMOND && block.getLocation().getWorld().getEnvironment() != Environment.THE_END) {
 				Logging.logError("removing diamond in chest in dimension: " + block.getLocation().getWorld().getEnvironment(), 0);
-				item = null;
-				continue;
-			}
-			ItemMeta meta = item.getItemMeta();
-			if(meta == null || !meta.hasEnchants()) {
-				Logging.logError("skipping " + item.getType() + ": unenchanted", 0);
+				inv.remove(item);
 				continue;
 			}
 			
-			for(Map.Entry<Enchantment, Integer> entry : meta.getEnchants().entrySet()) {
-				if(entry.getKey().getName() == Enchantment.LOOT_BONUS_BLOCKS.getName()) {
-					Logging.logError("removing Fortune from " + item.getType().toString(), 0);
-					meta.removeEnchant(entry.getKey());
-					meta.addEnchant(Enchantment.SILK_TOUCH, 1, false);
-					continue;
-				}
-				if(entry.getKey().getName() == Enchantment.MENDING.getName()) {
-					Logging.logError("removing Memding from " + item.getType().toString(), 0);
-					meta.removeEnchant(entry.getKey());
-					meta.addEnchant(Enchantment.DURABILITY, 3, false);
-					continue;
-				}
-				if(entry.getKey().getName() == Enchantment.BINDING_CURSE.getName() || entry.getKey().getName() == Enchantment.VANISHING_CURSE.getName()) {
-					if(Math.random() > 0.05 && block.getLocation().getWorld().getEnvironment() == Environment.THE_END) {
-						Logging.logError("removing " + entry.getKey().getName() + " from " + item.getType().toString(), 0);
-						meta.removeEnchant(entry.getKey());
-						continue;
-					}
-				}
+			ItemMeta meta = item.getItemMeta();
+			if(meta == null || (!meta.hasEnchants() && item.getType() != Material.ENCHANTED_BOOK)) {
+				continue;
 			}
-			item.setItemMeta(meta);
+			
+			Logging.logError(item.getType().toString(), 0);
+			Integer remove = item.removeEnchantment(Enchantment.MENDING);
+			if(remove == 0) {
+				Logging.logError("Mending removed", 0);
+				item.addUnsafeEnchantment(Enchantment.DURABILITY, 3);
+			}
+			remove = item.removeEnchantment(Enchantment.LOOT_BONUS_BLOCKS);
+			if(remove == 0) {
+				Logging.logError("Fortune removed", 0);
+				item.addUnsafeEnchantment(Enchantment.SILK_TOUCH, 1);
+			}
+			if(Math.random() > 0.05 && block.getLocation().getWorld().getEnvironment() == Environment.THE_END) {
+				item.removeEnchantment(Enchantment.BINDING_CURSE);
+				item.removeEnchantment(Enchantment.VANISHING_CURSE);
+			}
 		}
 	}
 	
@@ -90,7 +86,6 @@ public class ChestLoot {
 		return false;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static void populateChestMinecartLoot(Entity entity) {
 		if(!isNewLootCart(entity)) {
 			return;
@@ -104,27 +99,23 @@ public class ChestLoot {
 			if(item == null) {
 				continue;
 			}
+			
 			ItemMeta meta = item.getItemMeta();
-			if(meta == null || !meta.hasEnchants()) {
+			if(meta == null || (!meta.hasEnchants() && item.getType() != Material.ENCHANTED_BOOK)) {
 				continue;
 			}
 			
-			for(Map.Entry<Enchantment, Integer> entry : meta.getEnchants().entrySet()) {
-				if(entry.getKey().getName() == Enchantment.LOOT_BONUS_BLOCKS.getName()) {
-					Logging.logError("removing Fortune from " + item.getType().toString(), 0);
-					meta.removeEnchant(entry.getKey());
-					meta.addEnchant(Enchantment.SILK_TOUCH, 1, false);
-					continue;
-				}
-				if(entry.getKey().getName() == Enchantment.MENDING.getName()) {
-					Logging.logError("removing Memding from " + item.getType().toString(), 0);
-					meta.removeEnchant(entry.getKey());
-					meta.addEnchant(Enchantment.DURABILITY, 3, false);
-					continue;
-				}
+			Logging.logError(item.getType().toString(), 0);
+			Integer remove = item.removeEnchantment(Enchantment.MENDING);
+			if(remove == 0) {
+				Logging.logError("Mending removed", 0);
+				item.addEnchantment(Enchantment.DURABILITY, 3);
 			}
-
-			item.setItemMeta(meta);
+			remove = item.removeEnchantment(Enchantment.LOOT_BONUS_BLOCKS);
+			if(remove == 0) {
+				Logging.logError("Fortune removed", 0);
+				item.addEnchantment(Enchantment.SILK_TOUCH, 1);
+			}
 		}
 	}
 	
