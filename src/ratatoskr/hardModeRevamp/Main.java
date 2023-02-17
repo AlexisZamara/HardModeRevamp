@@ -17,7 +17,6 @@ import ratatoskr.hardModeRevamp.logger.Commands;
 import ratatoskr.hardModeRevamp.logger.GriefLogging;
 import ratatoskr.hardModeRevamp.logger.Logging;
 import ratatoskr.hardModeRevamp.loot.ChestLootListener;
-import ratatoskr.hardModeRevamp.loot.HopperListener;
 import ratatoskr.hardModeRevamp.loot.PlayerFish;
 import ratatoskr.hardModeRevamp.mobs.CreatureSpawn;
 import ratatoskr.hardModeRevamp.mobs.EntityChangeBlock;
@@ -74,7 +73,6 @@ public class Main extends JavaPlugin {
 		
 		// loot
 		getServer().getPluginManager().registerEvents(new ChestLootListener(), this);
-		getServer().getPluginManager().registerEvents(new HopperListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerFish(), this);
 		
 		// mobs
