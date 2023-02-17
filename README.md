@@ -1,7 +1,7 @@
 # HardModeRevamp
 (WIP) a Minecraft plugin for 1.16.5 to make things just a bit more difficult and make grinding a part of the game again
 
-#### v0.3.2 - the loot rework
+#### v0.3.4 - the loot rework
 
 ## Features (finished)
 - Bed respawns altered
@@ -12,11 +12,13 @@
 - Enchantment table rebalanced
 - Enchantments: Fortune and Mending can no longer be obtained
 - Endermen can no longer pick up blocks
+- Fished enchanted books have a higher chance of having a curse
 - Food bar now functions as a stamina bar
 - God apples craftable again
 - Health no longer affected by food bar, eating provides a quick burst of health regeneration
 - Hostile mobs have randomized speed and health values
 - Hostile mob xp increased
+- Loot chests rebalanced
 - Piglin bartering rebalanced
 - Phantoms disabled
 - Potion brewing grants XP
@@ -25,8 +27,6 @@
 - Weapons, Tools and Gold Armor values rebalanced
 
 ## Features (untested)
-- Fished enchanted books have a higher chance of having a curse
-- Loot chests rebalanced
 - Log players destroying another player's block
 
 ## Known Issues:
@@ -37,7 +37,9 @@
 - Stamina:
   - player sprint ends when food bar reaches 6/20
 
-## Features (planned)
+## Upcoming Changes
+- Food item stamina and health values properly balanced
+- Lapis Lazuli trade added to villagers (1:1)
 - Log players equipping an item with an illegal enchantment
 - Taking damage while regenerating health suspends or cancels health regeneration for a few seconds
 
@@ -70,10 +72,10 @@
   - sword damage reduced by 1 (or half a heart)
   
 #### Loot Table Changes:
-- diamonds removed from loot chests outside The End
+- diamonds removed from loot chests outside The End dimension
 - enchanted items obtained from fishing have an 87.5% chance of having a curse
 - enchanted items obtained from end city chests have a 5% chance of having a curse
-- phantom membranes (1-6) added to loot chests in The End
+- phantom membranes now generate in loot chests in The End dimension (0-6)
 
 #### Gameplay Changes
 - creeper explosions always cause blocks placed by a player to drop when destroyed 
@@ -139,3 +141,9 @@
 | EMERALD | PAINTING | 1:16 |
 | EMERALD | SCUTE | 1:1 |
 | EMERALD | SUSPICIOUS STEW | 1:1 |
+
+### Food Table
+coming soon(tm)
+| FOOD | HEALTH | STAMINA |
+| ---- |:------:|:-------:|
+| APPLE | ??? | ??? |
