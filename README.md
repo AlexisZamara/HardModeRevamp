@@ -10,6 +10,13 @@ a 1.16.5 Minecraft plugin to make things just a bit more difficult and make grin
 - Unbreaking now harder to obtain at the Enchanting Table
   - minimum enchanting level increased to 13/25/37 from 8/13/21
   - enchanting books is now the only way to obtain Unbreaking III from the enchanting table
+  
+#### Gameplay Changes
+- breaking a crop with a hoe automatically replants it using one of the dropped seeds
+- creeper explosions always cause blocks placed by a player to drop when destroyed 
+  - the dropped items may still be destroyed by a different creeper explosion
+- night can no longer be skipped
+- respawning at a bed now spawns the player on the surface within a 128-block radius around the bed's location
 
 #### Hostile Mob Changes
 - all hostile mobs:
@@ -26,7 +33,6 @@ a 1.16.5 Minecraft plugin to make things just a bit more difficult and make grin
   - speed now a random value between 0.22 and 0.245
 
 #### Item Changes
-- breaking a crop with a hoe automatically replants it using one of the dropped seeds
 - god apples can once again be crafted using shaped recipe:
   - A = Apple / G = Gold Block
     - G G G
@@ -45,12 +51,6 @@ a 1.16.5 Minecraft plugin to make things just a bit more difficult and make grin
 - enchanted items obtained from fishing have an 87.5% chance of having a curse
 - enchanted items obtained from end city chests have a 5% chance of having a curse
 - phantom membranes now generate in loot chests in The End dimension (0-6)
-
-#### Gameplay Changes
-- creeper explosions always cause blocks placed by a player to drop when destroyed 
-  - the dropped items may still be destroyed by a different creeper explosion
-- night can no longer be skipped
-- respawning at a bed now spawns the player on the surface within a 128-block radius around the bed's location
   
 #### Passive Mob Changes
 - piglin bartering table replaced
