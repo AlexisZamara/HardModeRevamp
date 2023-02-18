@@ -2,7 +2,6 @@ package ratatoskr.hardModeRevamp.mobs;
 
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -30,9 +29,6 @@ public class CreatureSpawn implements Listener {
 		else if(event.getEntityType() == EntityType.ZOMBIE) {
 			AttributeInstance speed = event.getEntity().getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
 			speed.setBaseValue(Random.RandomDouble(0.22, 0.245));
-			AttributeInstance reinforcement = event.getEntity().getAttribute(Attribute.ZOMBIE_SPAWN_REINFORCEMENTS);
-			AttributeModifier add = new AttributeModifier("ZOMBIE_REINFORCEMENT_MODIFIER", 0.05, AttributeModifier.Operation.ADD_NUMBER);
-			reinforcement.addModifier(add);
 		}
 		
 		Double health = Random.RandomDouble(event.getEntity().getMaxHealth() * 0.85, event.getEntity().getMaxHealth() * 1.2);

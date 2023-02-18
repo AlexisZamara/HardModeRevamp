@@ -15,6 +15,7 @@ import ratatoskr.hardModeRevamp.items.*;
 import ratatoskr.hardModeRevamp.listeners.*;
 import ratatoskr.hardModeRevamp.logger.Commands;
 import ratatoskr.hardModeRevamp.logger.GriefLogging;
+import ratatoskr.hardModeRevamp.logger.IllegalEnchantsDetection;
 import ratatoskr.hardModeRevamp.logger.Logging;
 import ratatoskr.hardModeRevamp.loot.ChestLootListener;
 import ratatoskr.hardModeRevamp.loot.PlayerFish;
@@ -24,11 +25,13 @@ import ratatoskr.hardModeRevamp.mobs.EntityDamageByEntity;
 import ratatoskr.hardModeRevamp.mobs.EntityDeath;
 import ratatoskr.hardModeRevamp.mobs.EntityExplode;
 import ratatoskr.hardModeRevamp.piglins.PiglinHandler;
+import ratatoskr.hardModeRevamp.stamina.CombatFatigue;
 import ratatoskr.hardModeRevamp.stamina.ConsumeFood;
 import ratatoskr.hardModeRevamp.stamina.Stamina;
 import ratatoskr.hardModeRevamp.villagers.PlayerInteractVillagerEvent;
 
 public class Main extends JavaPlugin {
+	public File enchantLogFile;
 	public File griefLogFile;
 	public File logsFile;
 	
@@ -42,7 +45,8 @@ public class Main extends JavaPlugin {
 			this.getDataFolder().mkdir();
 		}
 		this.saveDefaultConfig();
-		createFile("grieflog.txt");
+		createFile("enchantlogs.txt");
+		createFile("grieflogs.txt");
 		createFile("rlogs.txt");
 		
 		if(this.getConfig().getBoolean("godapples.enabled")) {
@@ -70,6 +74,7 @@ public class Main extends JavaPlugin {
 		
 		// logger
 		getServer().getPluginManager().registerEvents(new GriefLogging(), this);
+		getServer().getPluginManager().registerEvents(new IllegalEnchantsDetection(), this);
 		
 		// loot
 		getServer().getPluginManager().registerEvents(new ChestLootListener(), this);
@@ -86,13 +91,14 @@ public class Main extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new PiglinHandler(), this);
 		
 		// stamina
+		getServer().getPluginManager().registerEvents(new CombatFatigue(), this);
 		getServer().getPluginManager().registerEvents(new ConsumeFood(), this);
 		getServer().getPluginManager().registerEvents(new Stamina(), this);
 		
 		// villagers
 		getServer().getPluginManager().registerEvents(new PlayerInteractVillagerEvent(), this);
 		
-		Logging.logError("Plugin startup completed", 0);
+		Logging.logError("HardModeRevamp startup completed", 0);
 	}
 	
 	@Override
@@ -101,9 +107,17 @@ public class Main extends JavaPlugin {
 	}
 	
 	private void createFile(String filename) {
-		griefLogFile = new File(this.getDataFolder(), filename);
-		if(!griefLogFile.exists()) {
-			this.saveResource(filename, false);
+		if(filename == "grieflogs.txt") {
+			griefLogFile = new File(this.getDataFolder(), filename);
+			if(!griefLogFile.exists()) {
+				this.saveResource(filename, false);
+			}
+		}
+		if(filename == "enchantlogs.txt") {
+			enchantLogFile = new File(this.getDataFolder(), filename);
+			if(!enchantLogFile.exists()) {
+				this.saveResource(filename, false);
+			}
 		}
 	}
 	

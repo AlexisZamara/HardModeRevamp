@@ -15,6 +15,8 @@ public class RConstants {
 	public static final String PERSISTENT_KEY_STRING = "Ratatoskr-Reworked";
 	public static final NamespacedKey PERSISTENT_KEY = new NamespacedKey(Main.getPlugin(),PERSISTENT_KEY_STRING);
 	
+	public static final String PERSISTENT_COMBAT_FATIGUE_STRING = "combat-fatigue";
+	
 	public static final Material[] REWORKED_SWORDS = {Material.WOODEN_SWORD, Material.STONE_SWORD, Material.GOLDEN_SWORD, Material.IRON_SWORD, Material.DIAMOND_SWORD, Material.NETHERITE_SWORD};
 	public static final Material[] REWORKED_AXES = {Material.WOODEN_AXE, Material.STONE_AXE, Material.GOLDEN_AXE, Material.IRON_AXE, Material.DIAMOND_AXE, Material.NETHERITE_AXE};
 	public static final Material[] REWORKED_GOLDEN_ARMOR = {Material.GOLDEN_CHESTPLATE, Material.GOLDEN_LEGGINGS, Material.GOLDEN_BOOTS};

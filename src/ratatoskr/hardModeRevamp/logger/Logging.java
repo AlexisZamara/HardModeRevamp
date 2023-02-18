@@ -44,5 +44,19 @@ public class Logging {
 		Main.log(level + ": " + message, "rlogs.txt");
 	}
 	
-	
+	public static void logEnchant(String message) {
+		if(!plugin.getConfig().getBoolean("logs.enabled")) {
+			return;
+		}
+		
+		if(plugin.getConfig().getBoolean("logs.op")) {
+			Set<OfflinePlayer> ops = plugin.getServer().getOperators();
+			for(OfflinePlayer op: ops) {
+				if(op.isOnline()) {
+					op.getPlayer().sendMessage(ChatColor.RED + "ILLEGAL ENCHANT: " + message);
+				}
+			}
+		}
+		Main.log(message, "enchantlogs.txt");
+	}
 }

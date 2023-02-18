@@ -13,6 +13,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -22,14 +23,6 @@ import ratatoskr.hardModeRevamp.utils.RConstants;
 
 public class ConsumeFood implements Listener {
 	private Plugin plugin = Main.getPlugin();
-	
-	// TODO: add custom PotionEffectType.COMBAT_SICKNESS : player cannot get the PotionEffectType.REGENERATION from eating food (except God Apples) for 12 seconds 
-	
-	// KNOWN ISSUE:
-	// right click to eat with main hand while looking at a block is unresponsive is the tick delay is set to less than 5
-	// all other situations happen on the same tick but this one for some unknown reason happens on the next tick
-	// so far all attempts to fix this issue have failed
-	// for now, the solution is to increase tick delay and make eating with main hand while looking at a block at least one tick slower than the other methods 
 	
 	@EventHandler
 	public void onPlayerTryConsumeFood(PlayerInteractEvent event) {
@@ -84,7 +77,7 @@ public class ConsumeFood implements Listener {
 	
 	@EventHandler
 	public void onPlayerConsumeFood(PlayerItemConsumeEvent event) {
-		if(event.getItem().getType() == Material.CHORUS_FRUIT || event.getItem().getType() == Material.SUSPICIOUS_STEW) {
+		if(event.getItem().getType() == Material.CHORUS_FRUIT || event.getItem().getType() == Material.SUSPICIOUS_STEW || event.getItem().getType() == Material.MILK_BUCKET) {
 			return;
 		}
 		
@@ -148,6 +141,14 @@ public class ConsumeFood implements Listener {
 	}
 	
 	private void setHealthRegen(Player player, Material food) {
+		if(player.hasMetadata(RConstants.PERSISTENT_COMBAT_FATIGUE_STRING)) {
+			for(MetadataValue meta : player.getMetadata(RConstants.PERSISTENT_COMBAT_FATIGUE_STRING)) {
+				if(meta.getOwningPlugin() == plugin) {
+					return;
+				}
+			}
+		}
+		
 		if(player.hasPotionEffect(PotionEffectType.REGENERATION)) {
 			player.removePotionEffect(PotionEffectType.REGENERATION);
 		}
@@ -156,6 +157,10 @@ public class ConsumeFood implements Listener {
 		
 		Integer regenRate = 12; // ticks per point @ Regen 3
 		Integer regenDuration = regenRate * health.intValue();
+		
+		if(regenDuration == 0) {
+			return;
+		}
 		
 		PotionEffect regen = new PotionEffect(PotionEffectType.REGENERATION, regenDuration, 2, false, false, false);
 		player.addPotionEffect(regen);

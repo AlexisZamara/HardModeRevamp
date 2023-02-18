@@ -1,6 +1,5 @@
 package ratatoskr.hardModeRevamp.items;
 
-import ratatoskr.hardModeRevamp.logger.Logging;
 import ratatoskr.hardModeRevamp.utils.RConstants;
 
 import java.util.Arrays;
@@ -82,7 +81,6 @@ public class ItemEventHandler implements Listener {
 		
 		ItemMeta meta = updateMeta(item);
 		if(meta == null) {
-			Logging.logError("ENTITY DROP ITEM IS NOT GOLDEN_ARMOR: " + item.getType(), 2);
 			return;
 		}
 		item.setItemMeta(meta);
@@ -100,7 +98,6 @@ public class ItemEventHandler implements Listener {
 		}
 		ItemMeta meta = updateMeta(item);
 		if(meta == null) {
-			Logging.logError("ENTITY PICKUP ITEM IS NOT GOLDEN_ARMOR: " + item.getType(), 2);
 			return;
 		}
 		item.setItemMeta(meta);
@@ -126,7 +123,6 @@ public class ItemEventHandler implements Listener {
 		
 		ItemMeta meta = updateMeta(item);
 		if(meta == null) {
-			Logging.logError("INVENTORY CLICK ITEM IS NOT GOLDEN_ARMOR: " + item.getType(), 2);
 			return;
 		}
 		item.setItemMeta(meta);

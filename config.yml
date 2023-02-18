@@ -19,7 +19,7 @@ godapples:
   enabled: true
 
 grieflogs:
-  enabled: true
+  enabled: false
 
 noelytra:
   overworld: true
@@ -27,6 +27,6 @@ noelytra:
   end: false
 
 logs:
-  enabled: false
+  enabled: true
   op: false
   level: 0

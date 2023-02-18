@@ -23,6 +23,7 @@ import org.bukkit.plugin.Plugin;
 public class EnchantItem implements Listener {
 	Plugin plugin = Main.getPlugin();
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onEnchantItem(EnchantItemEvent event) {
 		if(event.getEnchantBlock().getType() != Material.ENCHANTING_TABLE) {
@@ -48,12 +49,12 @@ public class EnchantItem implements Listener {
 		}
 		
 		if(offers == null) {
-			Logging.logError("no offers found in metadata, cannot provide reliable enchant", 2);
+			Logging.logError("no offers found in metadata, cannot provide reliable enchant for " + event.getItem().getType().toString(), 2);
 			// if offers cannot be located, complete an unreliable enchantment instead in order to prevent illegal enchant
 			for(Map.Entry<Enchantment, Integer> e : enchants.entrySet()) {
 				baseEnchant = e.getKey();
 				baseEnchantLevel = e.getValue();
-				Logging.logError("onEnchantItem could not locate suitable metadata of enchantment for " + event.getEnchanter().getName() + " enchanting " + event.getItem().getType().toString(), 2);
+				Logging.logError("onEnchantItem could not locate suitable metadata of enchantment for " + event.getEnchanter().getName() + " enchanting " + event.getItem().getType().toString() + ". Selected enchant: " + baseEnchant.getName(), 2);
 				break;
 			}
 		}
@@ -63,7 +64,7 @@ public class EnchantItem implements Listener {
 		}
 				
 		if(baseEnchant == null) {
-			Logging.logError("could not find an enchantment in the list of enchantments to add to " + event.getItem().getType().toString(), 2);
+			Logging.logError("Could not find an enchantment in the list of enchantments to add for " + event.getItem().getType().toString(), 2);
 			return;
 		}
 
