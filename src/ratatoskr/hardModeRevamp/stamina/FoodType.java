@@ -3,7 +3,7 @@ package ratatoskr.hardModeRevamp.stamina;
 public enum FoodType {
 	
 	APPLE(3, 4.0),
-	BAKED_POTATO(5, 4.0),
+	BAKED_POTATO(3, 3.0),
 	BEEF(1, 0.0),
 	BEETROOT(2, 4.0),
 	BEETROOT_SOUP(6, 8.0),
